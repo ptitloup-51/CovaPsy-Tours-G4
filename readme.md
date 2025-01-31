@@ -35,19 +35,12 @@ Ce que nous devons réaliser :
 - Mise en place du buzzer et boutons poussoirs
 
 ### Programmation
+Le code coté raspberry pi sera écrit en `C#` et le code coté STM32 sera réalisé en `C` ou en `C++`. 
+Si nous ne parvenons pas à trouver des bibliothèques adapté en `C#` nous pourrons utiliser du code `python` qui sera exécuté par le code `C#`.
+La majorité du code doit être sur la raspberry pi car plus puissant et plus simple à debbuger, le code de la STM32 ne doit servir que d'interface entre le raspberry pi et les capteurs et actioneurs.
+### Outils
 
-Les étapes pour installer votre programme....
-
-Dites ce qu'il faut faire...
-
-_exemple_: Executez la commande ``telnet mapscii.me`` pour commencer ensuite [...]
-
-
-Ensuite vous pouvez montrer ce que vous obtenez au final...
-
-## Démarrage
-
-Dites comment faire pour lancer votre projet
+Comme outils je recommande d'utiliser le logiciel [Rider](https://www.jetbrains.com/fr-fr/rider/) pour le code C#, [PyCharm](https://www.jetbrains.com/fr-fr/pycharm/) pour le code python et [CLion](https://www.jetbrains.com/fr-fr/clion/) pour le code C de la STM32.
 
 ## Fabriqué avec
 
