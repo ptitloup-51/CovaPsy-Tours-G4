@@ -42,17 +42,7 @@ La majorité du code doit être sur la raspberry pi car plus puissant et plus si
 
 Comme outils je recommande d'utiliser le logiciel [Rider](https://www.jetbrains.com/fr-fr/rider/) pour le code C#, [PyCharm](https://www.jetbrains.com/fr-fr/pycharm/) pour le code python et [CLion](https://www.jetbrains.com/fr-fr/clion/) pour le code C de la STM32.
 
-## Fabriqué avec
 
-Entrez les programmes/logiciels/ressources que vous avez utilisé pour développer votre projet
-
-_exemples :_
-* [Materialize.css](http://materializecss.com) - Framework CSS (front-end)
-* [Atom](https://atom.io/) - Editeur de textes
-
-## Contributing
-
-Si vous souhaitez contribuer, lisez le fichier [CONTRIBUTING.md](https://example.org) pour savoir comment le faire.
 
 ## Versions
 Listez les versions ici 
@@ -63,14 +53,5 @@ Liste des versions : [Cliquer pour afficher](https://github.com/your/project-nam
 _(pour le lien mettez simplement l'URL de votre projets suivi de ``/tags``)_
 
 ## Auteurs
-Listez le(s) auteur(s) du projet ici !
-* **Jhon doe** _alias_ [@outout14](https://github.com/outout14)
-
-Lisez la liste des [contributeurs](https://github.com/your/project/contributors) pour voir qui à aidé au projet !
-
-_(pour le lien mettez simplement l'URL de votre projet suivi de ``/contirubors``)_
-
-## License
-
-Ce projet est sous licence ``exemple: WTFTPL`` - voir le fichier [LICENSE.md](LICENSE.md) pour plus d'informations
-
+* **Loup Lavabre** _alias_ [@ptitloup-51](https://github.com/ptitloup-51)
+* **Baptiste DePaul** _alias_ [@Baptiste-dp](https://github.com/Baptiste-dp)
