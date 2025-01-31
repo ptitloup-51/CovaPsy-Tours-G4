@@ -9,15 +9,6 @@ Pour plus d'informations on peut s'appuyer sur ce [repos GIT](https://github.com
 ## Pour commencer
 
 Voici les différents éléments présent dans la voiture :
-- accéléromètre
-- raspberryPi
-- STM32
-- Lidar
-- caméra
-- capteur ultrasons
-- moteur direction
-- moteur propulsion
-- écran oled
 
 |                   | Rpi  | STM32 |
 |-------------------|------|-------|
@@ -32,15 +23,18 @@ Voici les différents éléments présent dans la voiture :
 | boutons poussoir  | GPIO |       |
 
 
-### Pré-requis
+### étapes de conception
 
-Ce qu'il est requis pour commencer avec votre projet...
+Ce que nous devons réaliser :
 
-- Programme 1
-- Programme 2
-- etc...
+- Découverte du cahier des charges
+- Mise en place du capteur ultrasons
+- Mise en place de la caméra (détection rouge/vert)
+- Mise en place du LiDAR
+- Mise en place des boutons poussoirs
+- Mise en place du buzzer et boutons poussoirs
 
-### Installation
+### Programmation
 
 Les étapes pour installer votre programme....
 
