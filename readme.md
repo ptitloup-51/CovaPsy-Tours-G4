@@ -10,17 +10,18 @@ Pour plus d'informations on peut s'appuyer sur ce [repos GIT](https://github.com
 
 Voici les différents éléments présent dans la voiture :
 
-|                   | Rpi  | STM32 |
-|-------------------|------|-------|
-| accéléromètre     | I2C  |       |
-| Lidar             | UART |       |
-| caméra            | X    |       |
-| capteur ultrasons |      | I2C   |
-| moteur direction  |      | GPIO  |
-| moteur propulsion |      | GPIO  |
-| écran oled        | I2C  |       |
-| buzzer            | GPIO |       |
-| boutons poussoir  | GPIO |       |
+|                   | Rpi  | STM32                 |
+|-------------------|------|-----------------------|
+| accéléromètre     | I2C  |                       |
+| Lidar             | UART |                       |
+| caméra            | X    |                       |
+| capteur ultrasons |      | I2C                   |
+| moteur direction  |      | GPIO                  |
+| moteur propulsion |      | GPIO                  |
+| écran oled        | I2C  |                       |
+| buzzer            | GPIO |                       |
+| boutons poussoir  | GPIO |                       |
+| Codeur            |      | Signaux en quadrature |
 
 
 ### étapes de conception
@@ -54,4 +55,4 @@ _(pour le lien mettez simplement l'URL de votre projets suivi de ``/tags``)_
 
 ## Auteurs
 * **Loup Lavabre** _alias_ [@ptitloup-51](https://github.com/ptitloup-51)
-* **Baptiste DePaul** _alias_ [@Baptiste-dp](https://github.com/Baptiste-dp)
+* **Baptiste De Paul** _alias_ [@Baptiste-dp](https://github.com/Baptiste-dp)
