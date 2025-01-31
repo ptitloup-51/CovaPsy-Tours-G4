@@ -1,14 +1,36 @@
 # SAE S6
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/made-with-c.svg)](https://forthebadge.com)
 
-
-
-Une petite description du projet
+Le projet consiste à créer une voiture complétement autonome, la seule interaction avec l'utilisateur doit être le lancement du programme via les boutons présent sur la voiture.
+Pour plus d'informations on peut s'appuyer sur ce [repos GIT](https://github.com/ajuton-ens/CourseVoituresAutonomesSaclay).
 
 ## Pour commencer
 
-Entrez ici les instructions pour bien débuter avec votre projet...
+Voici les différents éléments présent dans la voiture :
+- accéléromètre
+- raspberryPi
+- STM32
+- Lidar
+- caméra
+- capteur ultrasons
+- moteur direction
+- moteur propulsion
+- écran oled
+
+|                   | Rpi  | STM32 |
+|-------------------|------|-------|
+| accéléromètre     | I2C  |       |
+| Lidar             | UART |       |
+| caméra            | X    |       |
+| capteur ultrasons |      | I2C   |
+| moteur direction  |      | GPIO  |
+| moteur propulsion |      | GPIO  |
+| écran oled        | I2C  |       |
+| buzzer            | GPIO |       |
+| boutons poussoir  | GPIO |       |
+
 
 ### Pré-requis
 
