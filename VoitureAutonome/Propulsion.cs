@@ -24,6 +24,10 @@ public class Thrust
         pwmMotor.Start();
     }
 
+    /// <summary>
+    /// Change la vitesse de la voiture, valeur entre 0 et 100%
+    /// </summary>
+    /// <param name="speed"></param>
     public void SetSpeed(int speed)
     {
         speed = Math.Clamp(speed, 0, 100);
@@ -41,6 +45,9 @@ public class Thrust
         Console.WriteLine("Moteur arrêté (position neutre).");
     }
 
+    /// <summary>
+    /// Permet de proprement supprimer l'objet
+    /// </summary>
     public void Dispose()
     {
         pwmMotor.Stop();
