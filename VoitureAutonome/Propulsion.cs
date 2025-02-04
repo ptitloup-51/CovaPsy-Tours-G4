@@ -63,7 +63,7 @@ public class Thrust
     float angleDegre = 0; // Angle actuel
 
     // Déclaration du PWM
-    static PwmChannel pwm = PwmChannel.Create(0, 1, 50);  
+    static PwmChannel pwm = PwmChannel.Create(0, 1, 50);
     // Gpio 13, Canal 1, 50 Hz => initialement mis sur Gpio 0 mais contradictoire avec le schéma structurel
 
     public Direction()
@@ -89,7 +89,7 @@ public class Thrust
         anglePwmCentre = (anglePwmMax + anglePwmMin) / 2;
     }
 } */
-public class Direction
+/*public class Direction
 {
     // Paramètres de départ
     static int direction = -1;  // 1 = gauche, -1 = droite
@@ -100,7 +100,7 @@ public class Direction
     static double angleDegre = 0; // Angle actuel
 
     // Initialisation du PWM
-    static PwmChannel pwm = PwmChannel.Create(13, 1, 50); // Canal 1, 50 Hz
+    static PwmChannel pwm = PwmChannel.Create(0, 1, 50); // Canal 1, 50 Hz
 
     public Direction()
     {
@@ -182,10 +182,10 @@ public class Direction
     }
 
     // Fonction pour régler l'angle du servo
-    static void SetDirectionDegre(double angleDegre)
+    public static void SetDirectionDegre(double angleDegre)
     {
         double anglePwm = anglePwmCentre + direction * (anglePwmMax - anglePwmMin) * angleDegre / (2 * angleDegreMax);
-        
+
         if (anglePwm > anglePwmMax) anglePwm = anglePwmMax;
         if (anglePwm < anglePwmMin) anglePwm = anglePwmMin;
 
@@ -197,5 +197,35 @@ public class Direction
     {
         anglePwmCentre = (anglePwmMax + anglePwmMin) / 2;
     }
+}*/
+
+// Paramètres direction
+
+public class Direction
+{
+    static int direction = -1;
+    static float angleMin = 6.2f;
+    static float angleMax = 8.5f;
+    static float angleCentre = 7.35f;
+    static float angleMaxDeg = 18.0f;
+
+    public Direction()
+    {
+        pwmDirection = PwmChannel.Create(0, 1, 50);
+        pwmDirection.Start();
+        Console.WriteLine("leche mes couilles");
+    }
+
+    public void SetDirection(float angle)
+    {
+        double dutyCycle = angleCentre + direction * ((angleMax - angleMin) * angle / (2 * angleMaxDeg));
+
+        if (dutyCycle > angleMax) dutyCycle = angleMax;
+        if (dutyCycle < angleMin) dutyCycle = angleMin;
+
+        pwmDirection.DutyCycle = dutyCycle / 100.0;
+        Console.WriteLine($"Direction réglée à {angle}°, Duty Cycle : {dutyCycle}%");
+    }
 }
+
 
