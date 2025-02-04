@@ -1,0 +1,1 @@
+-v --force --timestamp=none --sign - --entitlements /Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/Entitlements.xcent /Users/loup/Documents/GitHub/SAES6/RemoteClient/bin/Debug/net8.0-maccatalyst/maccatalyst-arm64/RemoteClient.app
