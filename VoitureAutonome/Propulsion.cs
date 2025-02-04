@@ -14,7 +14,7 @@ public class Thrust
     private int _trajectoryPin;
     private GpioController _gpio;
     
-    public Thrust(int pwmChip, int pwmChannel, int enablePin, int trajectoryPin, int frequency = 1000)
+    public Thrust(int pwmChip, int pwmChannel, int trajectoryPin, int frequency = 1000)
     {
         _pwm = PwmChannel.Create(pwmChip, pwmChannel, frequency, 0.0);
         _trajectoryPin = trajectoryPin;
