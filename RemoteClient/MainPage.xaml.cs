@@ -8,5 +8,9 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
     }
-    
+
+    private void Start_OnClicked(object? sender, EventArgs e)
+    {
+        Listener listener = new Listener();
+    }
 }
