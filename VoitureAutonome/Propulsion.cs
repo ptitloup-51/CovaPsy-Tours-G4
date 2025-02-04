@@ -26,7 +26,7 @@ public class Thrust
     }
 
     /// <summary>
-    /// Change la vitesse de la voiture, valeur entre 0 et 100%
+    /// Change la vitesse de la voiture, valeur entre 0% et 100%
     /// </summary>
     /// <param name="speed"></param>
     public void SetSpeed(int speed)
