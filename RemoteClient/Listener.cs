@@ -4,42 +4,44 @@ namespace RemoteClient;
 
 public class Listener
 {
-    public string Time { get; }
-    public int Speed { get; }
-    public int Angle { get; }
+
+    public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
 
     private static readonly HttpClient client = new HttpClient();
     
-    public Listener()
+    private string adress = string.Empty;
+    private int port = 0;
+    
+    string Baseurl; 
+    
+    public Listener(string _adress, int _port)
     {
-        Debug.WriteLine("Client démarré... Interroge le serveur chaque seconde.");
-        Task.Run(() => GetTime());
+        adress = _adress;
+        port = _port;
+        
+        Baseurl = $"http://{adress}:{port}/";
+        
+        Values.TryAdd("Heure", "..-..-..");
+        Values.TryAdd("Temperature", "0°C");
+
+        GetValues();
     }
 
-    private async void GetTime()
+    private async void GetValues()
     {
-        try
+        foreach (var val in Values)
         {
-            string url = "http://127.0.0.1:5555/Heure";
-            HttpResponseMessage response = await client.GetAsync(url);
-
+            HttpResponseMessage response = await client.GetAsync(Baseurl + val.Key);
             if (response.IsSuccessStatusCode)
             {
-                string time = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Heure du serveur: {time}");
+                string value = await response.Content.ReadAsStringAsync();
+                Values[val.Key] = value;
+                Console.WriteLine($"{val.Key} vaut {value}");
             }
             else
             {
                 Console.WriteLine($"Erreur: {response.StatusCode}");
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Exception: {ex.Message}");
-        }
     }
-    
-    
-
-   
 }

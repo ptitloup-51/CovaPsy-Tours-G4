@@ -4,9 +4,9 @@ public class Program
 {
     public static void Main(string[] args)
     { 
-       // RemoteDebug debug = new RemoteDebug();
-       //Direction dir = new Direction();
+        RemoteDebug debug = new RemoteDebug();
        
+       /*
         Thrust thrust = new Thrust();
         thrust.SetSpeed(10); // à 50% 
         Thread.Sleep(2000);
@@ -15,7 +15,7 @@ public class Program
         thrust.SetSpeed(10); // à -10% 
         Thread.Sleep(2000);
         thrust.Dispose(); //supprime l'objet
-        
+        */
         
         
         Console.ReadLine();
