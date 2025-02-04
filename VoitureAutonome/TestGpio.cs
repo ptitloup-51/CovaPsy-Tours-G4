@@ -1,6 +1,6 @@
 using System;
 using System.Device.Gpio;
-
+/*
 class TestGpio
 {
     static void Main()
@@ -8,3 +8,4 @@ class TestGpio
         Console.WriteLine("GPIO test");
     }
 }
+*/

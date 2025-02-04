@@ -54,6 +54,8 @@ public class Thrust
 /// <summary>
 /// Class <c>Direction</c> Permet de gérer l'angle de braquage entre 0 et 180°, 90° étant la direction en avant
 /// </summary>
+
+/*
 public class Direction
 {
     // Paramètres de départ
@@ -163,3 +165,4 @@ public class Direction
         anglePwmCentre = (anglePwmMax + anglePwmMin) / 2;
     }
 }
+*/
