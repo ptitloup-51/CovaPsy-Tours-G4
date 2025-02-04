@@ -2,6 +2,7 @@ using System;
 using System.Device.Pwm;
 using System.Device.Gpio;
 using System.Threading;
+using RPLidar;
 
 namespace VoitureAutonome;
 
@@ -55,6 +56,44 @@ public class Thrust
         Console.WriteLine("PWM arrêté proprement.");
     }
 }
+
+
+public class Lidar;
+{
+    public Lidar()
+    {
+        // Initialisation du Lidar avec la connexion série
+        var lidar = new RPLidarDriver();
+        
+        // Connexion à l'appareil
+        lidar.Connect("/dev/ttyUSB0"); // Ajuste le port COM selon ton système
+        Console.WriteLine("Connexion réussie.");
+
+/*      // Obtenir des informations sur le lidar
+        var info = lidar.GetDeviceInfo();
+        Console.WriteLine("Infos du lidar :");
+        Console.WriteLine($"Modèle : {info.Model}");
+        Console.WriteLine($"Numéro de série : {info.SerialNumber}");
+        Console.WriteLine($"Firmware Version : {info.FirmwareVersion}");
+*/
+        // Démarrer le moteur du lidar
+        lidar.StartMotor();
+        Console.WriteLine("Moteur démarré...");
+        Thread.Sleep(1000); // Attendre 1 seconde
+
+        // Arrêter le moteur
+        lidar.StopMotor();
+        Console.WriteLine("Moteur arrêté.");
+
+        // Arrêter le lidar et déconnecter
+        lidar.Stop();
+        lidar.Disconnect();
+        Console.WriteLine("Lidar arrêté et déconnecté.");
+    }
+}
+
+
+
 
 /// <summary>
 /// Class <c>Direction</c> Permet de gérer l'angle de braquage entre 0 et 180°, 90° étant la direction en avant
