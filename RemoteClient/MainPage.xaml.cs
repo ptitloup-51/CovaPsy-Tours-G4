@@ -2,7 +2,7 @@
 
 public partial class MainPage : ContentPage
 {
-    int count = 0;
+    private Listener listener;
 
     public MainPage()
     {
@@ -10,7 +10,15 @@ public partial class MainPage : ContentPage
     }
 
     private void Start_OnClicked(object? sender, EventArgs e)
-    {
-        Listener listener = new Listener();
+    {   
+        if (Address.Text == null || Port.Text == null)
+        {
+            Address.Text = "192.168.2.127";
+            Port.Text = "5555";
+        }
+        
+        listener = new Listener(Address.Text, Convert.ToInt32(Port.Text));
+        
     }
+    
 }
