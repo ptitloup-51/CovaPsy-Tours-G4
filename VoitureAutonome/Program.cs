@@ -8,15 +8,14 @@ public class Program
        //Direction dir = new Direction();
        
         Thrust thrust = new Thrust();
-        thrust.SetSpeed(50); // à 50% 
+        thrust.SetSpeed(10); // à 50% 
+        Thread.Sleep(2000);
+        thrust.SetSpeed(0);
         Thread.Sleep(1000);
-        thrust.SetSpeed(50); // à 10% 
-        Thread.Sleep(5000);
-        thrust.SetSpeed(60); // à 10% 
-        Thread.Sleep(5000);
-        thrust.SetSpeed(10); // à 10% 
-        Thread.Sleep(5000);
-        thrust.Stop();
+        thrust.SetSpeed(10); // à -10% 
+        Thread.Sleep(2000);
+        thrust.Dispose(); //supprime l'objet
+        
         
         
         Console.ReadLine();
