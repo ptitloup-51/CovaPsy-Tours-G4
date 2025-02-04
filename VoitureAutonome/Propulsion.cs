@@ -49,7 +49,7 @@ public class Thrust
 /// </summary>
 
 
-public class Direction
+/*public class Direction
 {
     // Paramètres de départ
     int direction = -1;  // 1 = gauche, -1 = droite
@@ -85,4 +85,114 @@ public class Direction
     {
         anglePwmCentre = (anglePwmMax + anglePwmMin) / 2;
     }
+} */
+public class Direction
+{
+    // Paramètres de départ
+    static int direction = -1;  // 1 = gauche, -1 = droite
+    static double anglePwmMin = 100f; // Min
+    static double anglePwmMax = 100f; // Max
+    static double anglePwmCentre = 1; // Centre
+    static int angleDegreMax = 90; // Angle max en degrés
+    static double angleDegre = 0; // Angle actuel
+
+    // Initialisation du PWM
+    static PwmChannel pwm = PwmChannel.Create(13, 1, 50); // Canal 1, 50 Hz
+
+    public Direction()
+    {
+        pwm.Start();
+        SetDirectionDegre(angleDegre); // Initialiser au centre
+
+        Console.WriteLine("Réglage des butées, Q pour quitter");
+        Console.WriteLine("Valeur numérique pour tester un angle de direction");
+        Console.WriteLine("I pour inverser droite et gauche");
+        Console.WriteLine("g pour diminuer la butée gauche et G pour l'augmenter");
+        Console.WriteLine("d pour diminuer la butée droite et D pour l'augmenter");
+
+        while (true)
+        {
+            Console.Write("Angle, I, g, G, d, D ? ");
+            string input = Console.ReadLine();
+
+            if (input == "Q" || input == "q")
+                break;
+
+            if (int.TryParse(input, out int angle))
+            {
+                SetDirectionDegre(angle);
+            }
+            else
+            {
+                switch (input)
+                {
+                    case "I":
+                        direction = -direction;
+                        Console.WriteLine("Nouvelle direction : " + direction);
+                        break;
+                    case "g":
+                        if (direction == 1)
+                            anglePwmMax -= 0.1;
+                        else
+                            anglePwmMin += 0.1;
+                        AjusterCentre();
+                        SetDirectionDegre(-18);
+                        break;
+                    case "G":
+                        if (direction == 1)
+                            anglePwmMax += 0.1;
+                        else
+                            anglePwmMin -= 0.1;
+                        AjusterCentre();
+                        SetDirectionDegre(-18);
+                        break;
+                    case "d":
+                        if (direction == -1)
+                            anglePwmMax -= 0.1;
+                        else
+                            anglePwmMin += 0.1;
+                        AjusterCentre();
+                        SetDirectionDegre(-18);
+                        break;
+                    case "D":
+                        if (direction == -1)
+                            anglePwmMax += 0.1;
+                        else
+                            anglePwmMin -= 0.1;
+                        AjusterCentre();
+                        SetDirectionDegre(-18);
+                        break;
+                    default:
+                        Console.WriteLine("Commande non reconnue.");
+                        break;
+                }
+            }
+        }
+
+        Console.WriteLine("Nouvelles valeurs:");
+        Console.WriteLine($"Direction : {direction}");
+        Console.WriteLine($"anglePwmMin : {anglePwmMin}");
+        Console.WriteLine($"anglePwmMax : {anglePwmMax}");
+        Console.WriteLine($"anglePwmCentre : {anglePwmCentre}");
+
+        pwm.Stop();
+    }
+
+    // Fonction pour régler l'angle du servo
+    static void SetDirectionDegre(double angleDegre)
+    {
+        double anglePwm = anglePwmCentre + direction * (anglePwmMax - anglePwmMin) * angleDegre / (2 * angleDegreMax);
+        
+        if (anglePwm > anglePwmMax) anglePwm = anglePwmMax;
+        if (anglePwm < anglePwmMin) anglePwm = anglePwmMin;
+
+        pwm.DutyCycle = anglePwm / 100.0; // Conversion en pourcentage
+    }
+
+    // Ajuste la valeur du centre après modification des butées
+    static void AjusterCentre()
+    {
+        anglePwmCentre = (anglePwmMax + anglePwmMin) / 2;
+    }
 }
+
