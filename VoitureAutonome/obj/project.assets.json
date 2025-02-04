@@ -18,6 +18,24 @@
           "buildTransitive/net5.0/System.Device.Gpio.targets": {}
         }
       }
+    },
+    "net8.0/linux-arm64": {
+      "System.Device.Gpio/3.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/System.Device.Gpio.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/System.Device.Gpio.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net5.0/System.Device.Gpio.targets": {}
+        }
+      }
     }
   },
   "libraries": {
@@ -49,24 +67,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\battd\\.nuget\\packages\\": {}
+    "/Users/loup/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
+      "projectUniqueName": "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/VoitureAutonome.csproj",
       "projectName": "VoitureAutonome",
-      "projectPath": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
-      "packagesPath": "C:\\Users\\battd\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\obj\\",
+      "projectPath": "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/VoitureAutonome.csproj",
+      "packagesPath": "/Users/loup/.nuget/packages/",
+      "outputPath": "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\battd\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/loup/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -83,9 +102,8 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
-      },
-      "SdkAnalysisLevel": "9.0.100"
+        "auditMode": "direct"
+      }
     },
     "frameworks": {
       "net8.0": {
@@ -109,20 +127,8 @@
         "warn": true,
         "downloadDependencies": [
           {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[8.0.11, 8.0.11]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
+            "name": "Microsoft.NETCore.App.Host.linux-arm64",
+            "version": "[8.0.7, 8.0.7]"
           }
         ],
         "frameworkReferences": {
@@ -130,7 +136,12 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\battd\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.303/PortableRuntimeIdentifierGraph.json"
+      }
+    },
+    "runtimes": {
+      "linux-arm64": {
+        "#import": []
       }
     }
   }

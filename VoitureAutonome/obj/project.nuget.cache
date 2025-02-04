@@ -1,14 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "5WKoWq/QN48=",
+  "dgSpecHash": "ruLR459ljqE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
+  "projectFilePath": "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/VoitureAutonome.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\battd\\.nuget\\packages\\system.device.gpio\\3.2.0\\system.device.gpio.3.2.0.nupkg.sha512",
-    "C:\\Users\\battd\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.11\\microsoft.netcore.app.ref.8.0.11.nupkg.sha512",
-    "C:\\Users\\battd\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.11\\microsoft.windowsdesktop.app.ref.8.0.11.nupkg.sha512",
-    "C:\\Users\\battd\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.11\\microsoft.aspnetcore.app.ref.8.0.11.nupkg.sha512",
-    "C:\\Users\\battd\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.11\\microsoft.netcore.app.host.win-x64.8.0.11.nupkg.sha512"
+    "/Users/loup/.nuget/packages/system.device.gpio/3.2.0/system.device.gpio.3.2.0.nupkg.sha512",
+    "/Users/loup/.nuget/packages/microsoft.netcore.app.host.linux-arm64/8.0.7/microsoft.netcore.app.host.linux-arm64.8.0.7.nupkg.sha512"
   ],
   "logs": []
 }
