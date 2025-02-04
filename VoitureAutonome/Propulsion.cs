@@ -10,37 +10,31 @@ namespace VoitureAutonome;
 /// </summary>
 public class Thrust
 {
-    private PwmChannel _pwm;
-    private int _trajectoryPin;
-    private GpioController _gpio;
+    static PwmChannel pwmMotor;
+    static PwmChannel pwmDirection;
     
-    public Thrust(int pwmChip, int pwmChannel, int trajectoryPin, int frequency = 1000)
+    // Paramètres moteur
+    static double pwmStop = 8.10;
+    static double pointMort = 0.46;
+    static double deltaPwmMax = 1.5;
+    static double vitesseMaxSoft = 2.0;
+    static double vitesseMaxHard = 8.0;
+    static int directionProp = -1;
+    
+    static void SetVitesse(double vitesse)
     {
-        _pwm = PwmChannel.Create(pwmChip, pwmChannel, frequency, 0.0);
-        _trajectoryPin = trajectoryPin;
-        _gpio = new GpioController();
-        _gpio.OpenPin(_trajectoryPin, PinMode.Output);
-    }
-    public void SetSpeed(int speed) // Plage de -100 à 100
-    {
-        speed = Math.Clamp(speed, -100, 100);
-        double dutyCycle = Math.Abs(speed) / 100.0; // Conversion en 0 - 1
-        
-        if (speed == 0)
+        double dutyCycle = pwmStop;
+        if (vitesse > 0)
         {
-            _pwm.Stop();
+            dutyCycle += directionProp * (pointMort + vitesse * (deltaPwmMax / vitesseMaxHard));
         }
-        else
+        else if (vitesse < 0)
         {
-            _gpio.Write(_trajectoryPin, speed > 0 ? PinValue.High : PinValue.Low);
-            _pwm.DutyCycle = dutyCycle;
-            _pwm.Start();
+            dutyCycle -= directionProp * (pointMort - vitesse * (deltaPwmMax / vitesseMaxHard));
         }
-    }
 
-    public void Stop()
-    {
-        _pwm.Stop();
+        pwmMotor.DutyCycle = dutyCycle / 100.0;
+        Console.WriteLine($"Vitesse réglée : {vitesse} m/s, Duty Cycle : {dutyCycle}%");
     }
 }
 
