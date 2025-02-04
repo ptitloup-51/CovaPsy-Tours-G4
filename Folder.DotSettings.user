@@ -1,3 +1,3 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=4ceacd07_002D229e_002Da292_002D8093_002D665eae846f3b_0023VoitureAutonome/@EntryIndexedValue">True</s:Boolean>
+	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=bd5a2f38_002Dac74_002D2d5a_002Dfbaa_002Daccb9191b0cc_0023RemoteClient/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
