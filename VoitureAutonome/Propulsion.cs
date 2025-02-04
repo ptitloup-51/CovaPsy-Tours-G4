@@ -60,7 +60,7 @@ public class Direction
     float angleDegre = 0; // Angle actuel
 
     // Déclaration du PWM
-    static PwmChannel pwm = PwmChannel.Create(13, 1, 50);  
+    static PwmChannel pwm = PwmChannel.Create(0, 1, 50);  
     // Gpio 13, Canal 1, 50 Hz => initialement mis sur Gpio 0 mais contradictoire avec le schéma structurel
 
     public Direction()
@@ -70,7 +70,7 @@ public class Direction
     }
 
     // Fonction pour régler l'angle du servo
-    void SetDirectionDegre(float angleDegre)
+    public void SetDirectionDegre(float angleDegre)
     {
         // Calcul de l'angle PWM en fonction de l'angle en degrés
         float anglePwm = anglePwmCentre + direction * (anglePwmMax - anglePwmMin) * angleDegre / (2 * angleDegreMax);

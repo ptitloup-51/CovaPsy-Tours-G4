@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
@@ -14,6 +16,26 @@ public class RemoteDebug
     {
         Task.Run(() => RunServer());
     }
+    
+    private static string GetLocalIPAddress()
+    {
+        foreach (NetworkInterface netInterface in NetworkInterface.GetAllNetworkInterfaces())
+        {
+            if (netInterface.OperationalStatus == OperationalStatus.Up &&
+                netInterface.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+            {
+                foreach (UnicastIPAddressInformation ip in netInterface.GetIPProperties().UnicastAddresses)
+                {
+                    if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return ip.Address.ToString(); // Retourne la première adresse IPv4 trouvée
+                    }
+                }
+            }
+        }
+        return "127.0.0.1"; // Fallback si aucune IP trouvée
+    }
+    
 
     /// <summary>
     /// Execute le serveur Web pour les requetes API
@@ -22,6 +44,7 @@ public class RemoteDebug
     /// <param name="port"></param>
     public static void RunServer( string address = "127.0.0.1", int port = 5555)
     {
+        address = GetLocalIPAddress();
         Console.WriteLine( $"Starting server on {address}:{port}" );
         HttpListener listener = new HttpListener();
         listener.Prefixes.Add($"http://{address}:{port}/");
