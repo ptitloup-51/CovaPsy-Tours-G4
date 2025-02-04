@@ -11,40 +11,39 @@ namespace VoitureAutonome;
 public class Thrust
 {
     static PwmChannel pwmMotor;
-    
-    // Paramètres moteur
-    static double pwmStop = 8.10;
-    static double pointMort = 0.46;
-    static double deltaPwmMax = 1.5;
-    static double vitesseMaxSoft = 2.0;
-    static double vitesseMaxHard = 8.0;
-    static int directionProp = -1;
-    
-    static void initialisation()
-    {
-        // Configuration du PWM
-        pwmMotor = PwmChannel.Create(32, 0, 1000, pwmStop / 100.0);
 
-        pwmMotor.Start();
-        
-        Console.WriteLine("Fin");
+    private const float _pwmMin = 8.10f; //Valeur minimum pour que le moteur tourne
+    private const float _pwmMax = 1.5f; //Valeur maximum que peut supporter le moteur
+
+    private double DutyCycle;
+    private static PwmChannel _pwmChannel;
+
+    public void SetSpeed(int speed)
+    {
+        speed = Math.Clamp(speed, 0, 100);
+        DutyCycle = _pwmMin + (speed / 100.0) * (_pwmMax - _pwmMin);
+        pwmMotor.DutyCycle = DutyCycle;
+    }
+
+    public void Stop()
+    {
+        _pwmChannel.Stop();
     }
     
-    static void SetVitesse(double vitesse)
+    public void Start()
     {
-        double dutyCycle = pwmStop;
-        if (vitesse > 0)
-        {
-            dutyCycle += directionProp * (pointMort + vitesse * (deltaPwmMax / vitesseMaxHard));
-        }
-        else if (vitesse < 0)
-        {
-            dutyCycle -= directionProp * (pointMort - vitesse * (deltaPwmMax / vitesseMaxHard));
-        }
-
-        pwmMotor.DutyCycle = dutyCycle / 100.0;
-        Console.WriteLine($"Vitesse réglée : {vitesse} m/s, Duty Cycle : {dutyCycle}%");
+        _pwmChannel.Start();
     }
+    
+    static Thrust()
+    {
+        _pwmChannel = PwmChannel.Create(0, 0, 50, 0);
+        _pwmChannel.Start();
+    }
+    
+    ~Thrust() => _pwmChannel.Stop();
+    
+   
 }
 
 /// <summary>

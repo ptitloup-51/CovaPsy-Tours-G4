@@ -7,18 +7,38 @@
         <!-- Image -->
         <Image Source="dotnet_bot.png" HeightRequest="100" HorizontalOptions="Center"/>
         
+        <!-- Adresse IP & Port -->
+        <Frame CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD" HorizontalOptions="FillAndExpand">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Configuration de connexion" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Grid ColumnSpacing="10" RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Text="Adresse IP:" VerticalTextAlignment="Center"/>
+                    <Entry Grid.Column="1" Placeholder="192.168.2.127" x:Name="Address" WidthRequest="150"/>
+
+                    <Label Text="Port:" Grid.Column="2" VerticalTextAlignment="Center"/>
+                    <Entry Grid.Column="3" Placeholder="5555" x:Name="Port" WidthRequest="100"/>
+                </Grid>
+            </VerticalStackLayout>
+        </Frame>
+
         <!-- Boutons -->
         <HorizontalStackLayout Spacing="20" HorizontalOptions="FillAndExpand">
-            <Label Text="Adresse IP"></Label>
-            <Editor Placeholder="192.168.2.127" x:Name="Address" WidthRequest="100"></Editor>
-            <Label Text="Port"></Label>
-            <Editor Placeholder="5555" WidthRequest="100" x:Name="Port"></Editor>
-            
-            <Button Text="🚗 Démarrer" x:Name="Start" Clicked="Start_OnClicked"  BackgroundColor="#4CAF50" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
-            <Button Text="🛑 Arrêter"  BackgroundColor="#F44336" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
-            
+            <Button Text="🚗 Démarrer" x:Name="Start" Clicked="Start_OnClicked"  
+                    BackgroundColor="#4CAF50" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
+            <Button Text="🛑 Arrêter"  
+                    BackgroundColor="#F44336" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
         </HorizontalStackLayout>
-        
+
         <!-- Télémétrie -->
         <Grid ColumnSpacing="10" RowSpacing="10" Padding="10" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
@@ -31,23 +51,23 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
-            <Frame Grid.Row="0" Grid.Column="0" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Frame Grid.Row="0" Grid.Column="0" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
                 <Label x:Name="TempLabel" Text="Température: -- °C" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
             </Frame>
-            <Frame Grid.Row="0" Grid.Column="1" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Frame Grid.Row="0" Grid.Column="1" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
                 <Label x:Name="TimeLabel" Text="Heure: --:--:--" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
             </Frame>
-            <Frame Grid.Row="1" Grid.Column="0" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Frame Grid.Row="1" Grid.Column="0" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
                 <Label x:Name="RollLabel" Text="Roulis: --°" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
             </Frame>
-            <Frame Grid.Row="1" Grid.Column="1" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Frame Grid.Row="1" Grid.Column="1" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
                 <Label x:Name="SpeedLabel" Text="Vitesse: -- km/h" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
             </Frame>
-            <Frame Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Frame Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
                 <Label x:Name="SteeringLabel" Text="Angle direction: --°" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
             </Frame>
         </Grid>
-        
+
     </VerticalStackLayout>
 
 </ContentPage>
