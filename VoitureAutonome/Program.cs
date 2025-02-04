@@ -2,4 +2,13 @@
 
 using VoitureAutonome;
 
-Console.WriteLine("Hello, World!");
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Hello, World!");
+        RemoteDebug debug = new RemoteDebug();
+        Console.ReadLine();
+    }
+}
+
