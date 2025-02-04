@@ -1,0 +1,15 @@
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Debug/net8.0/VoitureAutonome
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Debug/net8.0/VoitureAutonome.deps.json
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Debug/net8.0/VoitureAutonome.runtimeconfig.json
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Debug/net8.0/VoitureAutonome.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Debug/net8.0/VoitureAutonome.pdb
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/VoitureAutonome.GeneratedMSBuildEditorConfig.editorconfig
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/VoitureAutonome.AssemblyInfoInputs.cache
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/VoitureAutonome.AssemblyInfo.cs
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/VoitureAutonome.csproj.CoreCompileInputs.cache
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/VoitureAutonome.sourcelink.json
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/VoitureAutonome.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/refint/VoitureAutonome.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/VoitureAutonome.pdb
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/VoitureAutonome.genruntimeconfig.cache
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/Debug/net8.0/ref/VoitureAutonome.dll
