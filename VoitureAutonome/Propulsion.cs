@@ -1,6 +1,7 @@
 using System;
 using System.Device.Pwm;
 using System.Device.Gpio;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace VoitureAutonome;
@@ -30,7 +31,7 @@ public class Thrust
     /// <param name="speed"></param>
     public void SetSpeed(int speed)
     {
-        speed = Math.Clamp(speed, 0, 100);
+        speed = Math.Clamp(speed, 0, 100); //
         
         // Mapper la vitesse de 0% à 100% vers la plage de PWM entre _pwmMin et _pwmMax
         DutyCycle = _pwmMin + (speed / 100.0) * (_pwmMax - _pwmMin);
@@ -210,13 +211,14 @@ public class Thrust
 
 // Paramètres direction
 
-public class Direction
+/*public class Direction
 {
     static int direction = -1;
     static float angleMin = 6.2f;
     static float angleMax = 8.5f;
     static float angleCentre = 7.35f;
     static float angleMaxDeg = 18.0f;
+    
 
     public Direction()
     {
@@ -235,6 +237,50 @@ public class Direction
         pwmDirection.DutyCycle = dutyCycle / 100.0;
         Console.WriteLine($"Direction réglée à {angle}°, Duty Cycle : {dutyCycle}%");
     }
+}*/
+public class Direction
+{
+    private static PwmChannel pwmDirection;
+    private int direction = -1;  
+    private float anglePwmMin = 6.6f;
+    private float anglePwmMax = 8.9f;
+    private float anglePwmCentre = 7.75f;
+    private float angleDegreMax = 18;  
+    
+    private double DutyCycle;
+
+    public Direction()
+    {
+        // GPIO 0, Canal 0, fréquence 50 Hz, initialisé au centre
+        pwmDirection = PwmChannel.Create(0, 0, 50, anglePwmCentre);
+        pwmDirection.Start();
+    }
+    public void SetDirectionDegre(float angleDegre)
+    {
+        // Calcul de la valeur PWM en fonction de l'angle demandé
+        float anglePwm = anglePwmCentre + direction * (anglePwmMax - anglePwmMin) * angleDegre / (2 * angleDegreMax);
+        if (anglePwm > anglePwmMax) anglePwm = anglePwmMax;
+        if (anglePwm < anglePwmMin) anglePwm = anglePwmMin;
+
+        // Application du PWM au servo moteur
+        pwmDirection.DutyCycle = (anglePwm - anglePwmMin) / (anglePwmMax - anglePwmMin);
+        
+        DutyCycle = anglePwmMin + (direction / 100.0) * (angleDegre - anglePwmMin);
+        pwmDirection.DutyCycle = DutyCycle;
+
+        // Affichage de la nouvelle direction (pour le débogage)
+        Console.WriteLine($"Direction réglée à {angleDegre}° -> PWM: {pwmDirection.DutyCycle * 100:F2}%");
+    }
+    public void Dispose()
+    {
+        pwmDirection.Stop();  // Arrête le signal PWM
+        pwmDirection.Dispose();  // Libère la ressource PWM
+        
+        // Message de confirmation pour indiquer que tout est arrêté proprement
+        Console.WriteLine("PWM arrêté proprement. Comme ta mère !");
+    }
 }
 
+
+ 
 
