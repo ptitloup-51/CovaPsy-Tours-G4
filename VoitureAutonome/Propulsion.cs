@@ -11,7 +11,6 @@ namespace VoitureAutonome;
 public class Thrust
 {
     static PwmChannel pwmMotor;
-    static PwmChannel pwmDirection;
     
     // Paramètres moteur
     static double pwmStop = 8.10;
@@ -20,6 +19,16 @@ public class Thrust
     static double vitesseMaxSoft = 2.0;
     static double vitesseMaxHard = 8.0;
     static int directionProp = -1;
+    
+    static void initialisation()
+    {
+        // Configuration du PWM
+        pwmMotor = PwmChannel.Create(32, 0, 1000, pwmStop / 100.0);
+
+        pwmMotor.Start();
+        
+        Console.WriteLine("Fin");
+    }
     
     static void SetVitesse(double vitesse)
     {
