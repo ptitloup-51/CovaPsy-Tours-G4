@@ -1,25 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\timot\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj": {}
+    "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/VoitureAutonome.csproj": {}
   },
   "projects": {
-    "C:\\Users\\timot\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj": {
+    "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/VoitureAutonome.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\timot\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
+        "projectUniqueName": "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/VoitureAutonome.csproj",
         "projectName": "VoitureAutonome",
-        "projectPath": "C:\\Users\\timot\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
-        "packagesPath": "C:\\Users\\timot\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\timot\\RiderProjects\\SAES6\\VoitureAutonome\\obj\\",
+        "projectPath": "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/VoitureAutonome.csproj",
+        "packagesPath": "/Users/loup/.nuget/packages/",
+        "outputPath": "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\timot\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/loup/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -37,8 +38,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -60,30 +60,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.2, 8.0.2]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.2, 8.0.2]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.2, 8.0.2]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.2, 8.0.2]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-preview.3.24204.13/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
