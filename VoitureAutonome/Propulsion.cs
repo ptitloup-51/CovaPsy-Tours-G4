@@ -11,18 +11,14 @@ namespace VoitureAutonome;
 public class Thrust
 {
     private PwmChannel _pwm;
-    private int _enablePin;
     private int _trajectoryPin;
     private GpioController _gpio;
     
     public Thrust(int pwmChip, int pwmChannel, int enablePin, int trajectoryPin, int frequency = 1000)
     {
         _pwm = PwmChannel.Create(pwmChip, pwmChannel, frequency, 0.0);
-        _enablePin = enablePin;
         _trajectoryPin = trajectoryPin;
         _gpio = new GpioController();
-        
-        _gpio.OpenPin(_enablePin, PinMode.Output);
         _gpio.OpenPin(_trajectoryPin, PinMode.Output);
     }
     public void SetSpeed(int speed) // Plage de -100 à 100
@@ -33,21 +29,18 @@ public class Thrust
         if (speed == 0)
         {
             _pwm.Stop();
-            _gpio.Write(_enablePin, PinValue.Low);
         }
         else
         {
             _gpio.Write(_trajectoryPin, speed > 0 ? PinValue.High : PinValue.Low);
             _pwm.DutyCycle = dutyCycle;
             _pwm.Start();
-            _gpio.Write(_enablePin, PinValue.High);
         }
     }
 
     public void Stop()
     {
         _pwm.Stop();
-        _gpio.Write(_enablePin, PinValue.Low);
     }
 }
 
