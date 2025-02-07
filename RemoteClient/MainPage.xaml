@@ -10,24 +10,25 @@
         <!-- Adresse IP & Port -->
         <Frame CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD" HorizontalOptions="FillAndExpand">
             <VerticalStackLayout Spacing="10">
-                <Label Text="Configuration de connexion" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
-                <Grid ColumnSpacing="10" RowSpacing="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <Label Text="Configuration de connexion" FontSize="18" FontFamily="QuicksandBold" FontAttributes="Bold" HorizontalOptions="Center"/>
+               
                     
-                    <Label Text="Adresse IP:" VerticalTextAlignment="Center"/>
-                    <Entry Grid.Column="1" Placeholder="192.168.2.127" x:Name="Address" WidthRequest="150"/>
-
-                    <Label Text="Port:" Grid.Column="2" VerticalTextAlignment="Center"/>
-                    <Entry Grid.Column="3" Placeholder="5555" x:Name="Port" WidthRequest="100"/>
-                </Grid>
+                    <HorizontalStackLayout HorizontalOptions="Center">
+                        <HorizontalStackLayout Padding="0,0,10,0">
+                            <Label Text="Adresse IP:"  FontFamily="QuicksandBold" VerticalTextAlignment="Center"/>
+                            <Entry Placeholder="192.168.2.127" x:Name="Address" WidthRequest="150"/>
+                        </HorizontalStackLayout>
+                    
+                        <HorizontalStackLayout Padding="10,0,0,0">
+                            <Label Text="Port:" FontFamily="QuicksandBold" VerticalTextAlignment="Center"/>
+                            <Entry Placeholder="5555" x:Name="Port" WidthRequest="100"/>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                    
+                  
+                    
+                    
+                
             </VerticalStackLayout>
         </Frame>
 

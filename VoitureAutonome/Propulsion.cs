@@ -65,222 +65,91 @@ public class Thrust
 /// </summary>
 
 
-/*public class Direction
+//permet d'identifier les valeurs de PWM
+class SteeringTest
 {
-    // Paramètres de départ
-    int direction = -1;  // 1 = gauche, -1 = droite
-    float anglePwmMin = 1000f; // Min
-    float anglePwmMax = 1000f; // Max
-    float anglePwmCentre = 1f; // Centre
-    float angleDegreMax = 90; // Angle max en degrés
-    float angleDegre = 0; // Angle actuel
-
-    // Déclaration du PWM
-    static PwmChannel pwm = PwmChannel.Create(0, 1, 50);
-    // Gpio 13, Canal 1, 50 Hz => initialement mis sur Gpio 0 mais contradictoire avec le schéma structurel
-
-    public Direction()
+    public void Test()
     {
-        pwm.Start();  // Démarre la PWM
-        SetDirectionDegre(angleDegre);  // Initialise au centre
-    }
+        PwmChannel pwmSteering = PwmChannel.Create(0, 1, 50, 0.075); // Fréquence de 50 Hz, valeur initiale neutre
+        pwmSteering.Start();
 
-    // Fonction pour régler l'angle du servo
-    public void SetDirectionDegre(float angleDegre)
-    {
-        // Calcul de l'angle PWM en fonction de l'angle en degrés
-        float anglePwm = anglePwmCentre + direction * (anglePwmMax - anglePwmMin) * angleDegre / (2 * angleDegreMax);
-        // Limite l'angle PWM aux butées
-        if (anglePwm > anglePwmMax) anglePwm = anglePwmMax;
-        if (anglePwm < anglePwmMin) anglePwm = anglePwmMin;
-        // Conversion en pourcentage pour le PWM
-        pwm.DutyCycle = (anglePwm - anglePwmMin) / (anglePwmMax - anglePwmMin); // Pourcentage entre 0 et 1
-    }
-    // Ajuste la valeur du centre après modification des butées
-    void AjusterCentre()
-    {
-        anglePwmCentre = (anglePwmMax + anglePwmMin) / 2;
-    }
-} */
-/*public class Direction
-{
-    // Paramètres de départ
-    static int direction = -1;  // 1 = gauche, -1 = droite
-    static double anglePwmMin = 100f; // Min
-    static double anglePwmMax = 100f; // Max
-    static double anglePwmCentre = 1; // Centre
-    static int angleDegreMax = 90; // Angle max en degrés
-    static double angleDegre = 0; // Angle actuel
-
-    // Initialisation du PWM
-    static PwmChannel pwm = PwmChannel.Create(0, 1, 50); // Canal 1, 50 Hz
-
-    public Direction()
-    {
-        pwm.Start();
-        SetDirectionDegre(angleDegre); // Initialiser au centre
-
-        Console.WriteLine("Réglage des butées, Q pour quitter");
-        Console.WriteLine("Valeur numérique pour tester un angle de direction");
-        Console.WriteLine("I pour inverser droite et gauche");
-        Console.WriteLine("g pour diminuer la butée gauche et G pour l'augmenter");
-        Console.WriteLine("d pour diminuer la butée droite et D pour l'augmenter");
+        Console.WriteLine("Test des valeurs PWM pour la direction...");
+        Console.WriteLine(
+            "Entrez une valeur de PWM en pourcentage (ex: 6.0 pour gauche, 7.5 pour neutre, 9.0 pour droite). Tapez 'exit' pour quitter.");
 
         while (true)
         {
-            Console.Write("Angle, I, g, G, d, D ? ");
+            Console.Write("PWM (%): ");
             string input = Console.ReadLine();
 
-            if (input == "Q" || input == "q")
+            if (input.ToLower() == "exit")
                 break;
 
-            if (int.TryParse(input, out int angle))
+            if (double.TryParse(input, out double pwmValue))
             {
-                SetDirectionDegre(angle);
+                double dutyCycle = pwmValue / 100.0; // Conversion en fraction
+                pwmSteering.DutyCycle = dutyCycle;
+                Console.WriteLine($"PWM réglé à {pwmValue}%");
             }
             else
             {
-                switch (input)
-                {
-                    case "I":
-                        direction = -direction;
-                        Console.WriteLine("Nouvelle direction : " + direction);
-                        break;
-                    case "g":
-                        if (direction == 1)
-                            anglePwmMax -= 0.1;
-                        else
-                            anglePwmMin += 0.1;
-                        AjusterCentre();
-                        SetDirectionDegre(-18);
-                        break;
-                    case "G":
-                        if (direction == 1)
-                            anglePwmMax += 0.1;
-                        else
-                            anglePwmMin -= 0.1;
-                        AjusterCentre();
-                        SetDirectionDegre(-18);
-                        break;
-                    case "d":
-                        if (direction == -1)
-                            anglePwmMax -= 0.1;
-                        else
-                            anglePwmMin += 0.1;
-                        AjusterCentre();
-                        SetDirectionDegre(-18);
-                        break;
-                    case "D":
-                        if (direction == -1)
-                            anglePwmMax += 0.1;
-                        else
-                            anglePwmMin -= 0.1;
-                        AjusterCentre();
-                        SetDirectionDegre(-18);
-                        break;
-                    default:
-                        Console.WriteLine("Commande non reconnue.");
-                        break;
-                }
+                Console.WriteLine("Valeur invalide, veuillez entrer un nombre.");
             }
         }
 
-        Console.WriteLine("Nouvelles valeurs:");
-        Console.WriteLine($"Direction : {direction}");
-        Console.WriteLine($"anglePwmMin : {anglePwmMin}");
-        Console.WriteLine($"anglePwmMax : {anglePwmMax}");
-        Console.WriteLine($"anglePwmCentre : {anglePwmCentre}");
-
-        pwm.Stop();
+        pwmSteering.Stop();
+        pwmSteering.Dispose();
+        Console.WriteLine("Test terminé.");
     }
+}
 
-    // Fonction pour régler l'angle du servo
-    public static void SetDirectionDegre(double angleDegre)
-    {
-        double anglePwm = anglePwmCentre + direction * (anglePwmMax - anglePwmMin) * angleDegre / (2 * angleDegreMax);
-
-        if (anglePwm > anglePwmMax) anglePwm = anglePwmMax;
-        if (anglePwm < anglePwmMin) anglePwm = anglePwmMin;
-
-        pwm.DutyCycle = anglePwm / 100.0; // Conversion en pourcentage
-    }
-
-    // Ajuste la valeur du centre après modification des butées
-    static void AjusterCentre()
-    {
-        anglePwmCentre = (anglePwmMax + anglePwmMin) / 2;
-    }
-}*/
-
-// Paramètres direction
-
-/*public class Direction
+public class Steering
 {
-    static int direction = -1;
-    static float angleMin = 6.2f;
-    static float angleMax = 8.5f;
-    static float angleCentre = 7.35f;
-    static float angleMaxDeg = 18.0f;
-    
+    private static PwmChannel pwmSteering;
 
-    public Direction()
-    {
-        pwmDirection = PwmChannel.Create(0, 1, 50);
-        pwmDirection.Start();
-        Console.WriteLine("leche mes couilles");
-    }
+    // Paramètres de la direction
+    private const float _anglePwmMin = 6.0f / 100; // PWM min (gauche)
+    private const float _anglePwmMax = 12.0f / 100; // PWM max (droite)
+    private const float _anglePwmCenter = 8f / 100; // PWM neutre (tout droit)
+    private const int _angleMax = 70; // Angle maximal en degrés
 
-    public void SetDirection(float angle)
-    {
-        double dutyCycle = angleCentre + direction * ((angleMax - angleMin) * angle / (2 * angleMaxDeg));
-
-        if (dutyCycle > angleMax) dutyCycle = angleMax;
-        if (dutyCycle < angleMin) dutyCycle = angleMin;
-
-        pwmDirection.DutyCycle = dutyCycle / 100.0;
-        Console.WriteLine($"Direction réglée à {angle}°, Duty Cycle : {dutyCycle}%");
-    }
-}*/
-public class Direction
-{
-    private static PwmChannel pwmDirection;
-    private int direction = -1;  
-    private float anglePwmMin = 6.6f;
-    private float anglePwmMax = 8.9f;
-    private float anglePwmCentre = 7.75f;
-    private float angleDegreMax = 18;  
-    
     private double DutyCycle;
 
-    public Direction()
+    public Steering()
     {
-        // GPIO 0, Canal 0, fréquence 50 Hz, initialisé au centre
-        pwmDirection = PwmChannel.Create(0, 0, 50, anglePwmCentre);
-        pwmDirection.Start();
+        pwmSteering = PwmChannel.Create(0, 1, 50, _anglePwmCenter); // Initialisation en position neutre
+        pwmSteering.Start();
     }
-    public void SetDirectionDegre(float angleDegre)
+
+    /// <summary>
+    /// Définit l'angle de direction en degrés (-18° à +18°)
+    /// </summary>
+    /// <param name="angle"></param>
+    public void SetDirection(int angle)
     {
-        // Calcul de la valeur PWM en fonction de l'angle demandé
-        float anglePwm = anglePwmCentre + direction * (anglePwmMax - anglePwmMin) * angleDegre / (2 * angleDegreMax);
-        if (anglePwm > anglePwmMax) anglePwm = anglePwmMax;
-        if (anglePwm < anglePwmMin) anglePwm = anglePwmMin;
+        angle = Math.Clamp(angle, -_angleMax, _angleMax);
 
-        // Application du PWM au servo moteur
-        pwmDirection.DutyCycle = (anglePwm - anglePwmMin) / (anglePwmMax - anglePwmMin);
-        
-        DutyCycle = anglePwmMin + (direction / 100.0) * (angleDegre - anglePwmMin);
-        pwmDirection.DutyCycle = DutyCycle;
+        // Mapper l'angle (-18° à 18°) sur la plage PWM (6% à 9%)
+        DutyCycle = _anglePwmCenter + (angle / (2.0 * _angleMax)) * (_anglePwmMax - _anglePwmMin);
+        pwmSteering.DutyCycle = DutyCycle;
 
-        // Affichage de la nouvelle direction (pour le débogage)
-        Console.WriteLine($"Direction réglée à {angleDegre}° -> PWM: {pwmDirection.DutyCycle * 100:F2}%");
+        Console.WriteLine($"Angle réglé à {angle}° -> PWM: {DutyCycle * 100:F2}%");
     }
+
+    public void Center()
+    {
+        pwmSteering.DutyCycle = _anglePwmCenter; // Revenir à la position neutre
+        Console.WriteLine("Direction centrée.");
+    }
+
+    /// <summary>
+    /// Permet de proprement supprimer l'objet
+    /// </summary>
     public void Dispose()
     {
-        pwmDirection.Stop();  // Arrête le signal PWM
-        pwmDirection.Dispose();  // Libère la ressource PWM
-        
-        // Message de confirmation pour indiquer que tout est arrêté proprement
-        Console.WriteLine("PWM arrêté proprement. Comme ta mère !");
+        pwmSteering.Stop();
+        pwmSteering.Dispose();
+        Console.WriteLine("PWM direction arrêté proprement.");
     }
 }
 

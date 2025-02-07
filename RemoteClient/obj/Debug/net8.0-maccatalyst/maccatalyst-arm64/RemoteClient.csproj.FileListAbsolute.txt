@@ -300,6 +300,11 @@
 /Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/RemoteClient.pdb
 /Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/RemoteClient.genruntimeconfig.cache
 /Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/ref/RemoteClient.dll
+/Users/loup/Documents/GitHub/SAES6/RemoteClient/bin/Debug/net8.0-maccatalyst/maccatalyst-arm64/Font/Quicksand-Bold.ttf
+/Users/loup/Documents/GitHub/SAES6/RemoteClient/bin/Debug/net8.0-maccatalyst/maccatalyst-arm64/Font/Quicksand-Light.ttf
+/Users/loup/Documents/GitHub/SAES6/RemoteClient/bin/Debug/net8.0-maccatalyst/maccatalyst-arm64/Font/Quicksand-Medium.ttf
+/Users/loup/Documents/GitHub/SAES6/RemoteClient/bin/Debug/net8.0-maccatalyst/maccatalyst-arm64/Font/Quicksand-Regular.ttf
+/Users/loup/Documents/GitHub/SAES6/RemoteClient/bin/Debug/net8.0-maccatalyst/maccatalyst-arm64/Font/Quicksand-SemiBold.ttf
 /Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/resourcestamps/Microsoft.CSharp.stamp
 /Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/resourcestamps/Microsoft.Extensions.Configuration.Abstractions.stamp
 /Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/resourcestamps/Microsoft.Extensions.Configuration.stamp
