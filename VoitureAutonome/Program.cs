@@ -4,10 +4,12 @@ public class Program
 {
     public static void Main(string[] args)
     { 
-      //  Console.WriteLine("Hello World!");
+        Console.WriteLine("Hello World!");
       //  RemoteDebug debug = new();
       
-
+     // Test test = new();
+    //  Thread.Sleep(10000);
+      
       
       Steering steering = new Steering();
       Thrust thrust = new Thrust();

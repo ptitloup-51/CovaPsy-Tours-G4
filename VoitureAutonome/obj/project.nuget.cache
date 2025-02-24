@@ -1,10 +1,24 @@
 {
   "version": 2,
-  "dgSpecHash": "ruLR459ljqE=",
+  "dgSpecHash": "3c9gcd7nYsE=",
   "success": true,
   "projectFilePath": "/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/VoitureAutonome.csproj",
   "expectedPackageFiles": [
+    "/Users/loup/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.1/microsoft.extensions.dependencyinjection.9.0.1.nupkg.sha512",
+    "/Users/loup/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.1/microsoft.extensions.dependencyinjection.abstractions.9.0.1.nupkg.sha512",
+    "/Users/loup/.nuget/packages/microsoft.extensions.logging/9.0.1/microsoft.extensions.logging.9.0.1.nupkg.sha512",
+    "/Users/loup/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.1/microsoft.extensions.logging.abstractions.9.0.1.nupkg.sha512",
+    "/Users/loup/.nuget/packages/microsoft.extensions.options/9.0.1/microsoft.extensions.options.9.0.1.nupkg.sha512",
+    "/Users/loup/.nuget/packages/microsoft.extensions.primitives/9.0.1/microsoft.extensions.primitives.9.0.1.nupkg.sha512",
+    "/Users/loup/.nuget/packages/runtime.linux-arm.runtime.native.system.io.ports/7.0.0/runtime.linux-arm.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
+    "/Users/loup/.nuget/packages/runtime.linux-arm64.runtime.native.system.io.ports/7.0.0/runtime.linux-arm64.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
+    "/Users/loup/.nuget/packages/runtime.linux-x64.runtime.native.system.io.ports/7.0.0/runtime.linux-x64.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
+    "/Users/loup/.nuget/packages/runtime.native.system.io.ports/7.0.0/runtime.native.system.io.ports.7.0.0.nupkg.sha512",
+    "/Users/loup/.nuget/packages/runtime.osx-arm64.runtime.native.system.io.ports/7.0.0/runtime.osx-arm64.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
+    "/Users/loup/.nuget/packages/runtime.osx-x64.runtime.native.system.io.ports/7.0.0/runtime.osx-x64.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
     "/Users/loup/.nuget/packages/system.device.gpio/3.2.0/system.device.gpio.3.2.0.nupkg.sha512",
+    "/Users/loup/.nuget/packages/system.diagnostics.diagnosticsource/9.0.1/system.diagnostics.diagnosticsource.9.0.1.nupkg.sha512",
+    "/Users/loup/.nuget/packages/system.io.ports/7.0.0/system.io.ports.7.0.0.nupkg.sha512",
     "/Users/loup/.nuget/packages/microsoft.netcore.app.host.linux-arm64/8.0.7/microsoft.netcore.app.host.linux-arm64.8.0.7.nupkg.sha512"
   ],
   "logs": []

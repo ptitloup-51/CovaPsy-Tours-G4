@@ -1,11 +1,18 @@
-namespace VoitureAutonome;
+using System;
+using System.Threading;
+using RPLidar;
 
-public class Lidar
+
+namespace VoitureAutonome
 {
-    public Lidar()
+    class Test
     {
-       
+        private readonly Lidar lidar = new Lidar();
+        public Test()
+        {
+          lidar.PortName = "/dev/ttyUSB0";
+          lidar.Baudrate = 256000;
+          lidar.GetHealth();
+        }
     }
-    
-    
 }
