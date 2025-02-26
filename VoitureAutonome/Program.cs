@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace VoitureAutonome;
 
 public class Program
@@ -27,11 +29,23 @@ public class Program
       lidar.StartMotor();
       
      
-
+        /*
       foreach (var measure in lidar.IterMeasures())
       {
           Console.WriteLine($"New Scan: {measure.Item1}, Quality: {measure.Item2}, Angle: {measure.Item3}, Distance: {measure.Item4}");
       }
+      */
+
+        var measure = lidar.IterMeasures("normal");
+
+        foreach (var mes in measure)
+        {
+            if ((float)mes.Item3 == 12)
+            {
+                Console.WriteLine($"Measure: {mes.Item1}, Quality: {mes.Item2}, Angle: {mes.Item3}, Distance: {mes.Item4}");
+            }
+           
+        }
 
       lidar.StopMotor();
       lidar.Disconnect();

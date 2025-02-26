@@ -268,7 +268,7 @@ public class RPLidar
                 byte[] raw = ReadResponse(dsize);
                 yield return ProcessScan(raw);
             }
-           /* else if (scanType == "express")
+            else if (scanType == "express")
             {
                 if (_expressTrame == 32)
                 {
@@ -281,7 +281,7 @@ public class RPLidar
                 }
                 _expressTrame++;
                 yield return ProcessExpressScan(_expressData, _expressTrame);
-            }*/
+            }
         }
     }
 
@@ -303,15 +303,20 @@ public class RPLidar
         return (newScan, quality, angle, distance);
     }
 
-    /*
     private (bool, int, float, float) ProcessExpressScan(ExpressPacket data, int trame)
-    {
-        bool newScan = (trame == 1) && (data.StartAngle < data.NewAngle);
-        float angle = (data.StartAngle + ((data.NewAngle - data.StartAngle) % 360) / 32 * trame - data.Angle[trame - 1]) % 360;
-        float distance = data.Distance[trame - 1];
-        return (newScan, 0, angle, distance);
-    }
-    */
+       {
+           // Vérifie si c'est un nouveau scan en fonction de l'angle de départ et de l'angle actuel
+           bool newScan = (trame == 1) && (data.StartAngle < data.Angle[trame - 1]);
+       
+           // Calcule l'angle en fonction de la trame actuelle
+           float angle = (data.StartAngle + ((data.Angle[trame - 1] - data.StartAngle) % 360) / 32 * trame) % 360;
+       
+           // Récupère la distance correspondant à la trame actuelle
+           float distance = data.Distance[trame - 1];
+       
+           // Retourne les résultats
+           return (newScan, 0, angle, distance);
+       }
 
     private byte GetScanTypeByte(string scanType)
     {
