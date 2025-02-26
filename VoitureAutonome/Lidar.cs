@@ -48,7 +48,6 @@ namespace VoitureAutonome
            catch (Exception e)
            {
                Console.WriteLine(e);
-              
            }
            
            Thread.Sleep(2000);

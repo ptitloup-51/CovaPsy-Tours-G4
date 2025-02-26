@@ -26,7 +26,9 @@ public class Program
       var health = lidar.GetHealth();
       Console.WriteLine($"Health: {health.Item1}, Error Code: {health.Item2}");
 
+      lidar.CleanInput();
       lidar.StartMotor();
+     // lidar.Start();
       
      
         /*
@@ -35,16 +37,18 @@ public class Program
           Console.WriteLine($"New Scan: {measure.Item1}, Quality: {measure.Item2}, Angle: {measure.Item3}, Distance: {measure.Item4}");
       }
       */
+        
+       
 
         var measure = lidar.IterMeasures("normal");
 
         foreach (var mes in measure)
         {
-            if ((float)mes.Item3 == 12)
+            double angle = mes.Item3; // Angle de la mesure
+            if (angle >= -2 && angle <= 2)
             {
                 Console.WriteLine($"Measure: {mes.Item1}, Quality: {mes.Item2}, Angle: {mes.Item3}, Distance: {mes.Item4}");
             }
-           
         }
 
       lidar.StopMotor();

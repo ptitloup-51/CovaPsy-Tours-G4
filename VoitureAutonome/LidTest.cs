@@ -51,6 +51,7 @@ public class RPLidar
             WriteTimeout = timeout
         };
     }
+    
 
     public void Connect()
     {
@@ -163,23 +164,49 @@ public class RPLidar
             { "serialnumber", serialNumber }
         };
     }
-
-    public (string, int) GetHealth()
+    
+    
+    private void ClearSerialBuffer()
     {
-        if (_serialPort.BytesToRead > 0)
+        _serialPort.DiscardInBuffer();
+        _serialPort.DiscardOutBuffer();
+    }
+
+    public (string, int) GetHealth(int maxRetries = 3)
+    {
+        for (int attempt = 0; attempt < maxRetries; attempt++)
         {
-            throw new RPLidarException("Data in buffer, you can't have info! Run CleanInput() to empty the buffer.");
+            try
+            {
+                ClearSerialBuffer();
+                SendCmd(GET_HEALTH_BYTE);
+
+                var (dsize, isSingle, dtype) = ReadDescriptor();
+                if (dsize != HEALTH_LEN || !isSingle || dtype != HEALTH_TYPE)
+                {
+                    throw new RPLidarException("Wrong get_health reply");
+                }
+
+                byte[] raw = ReadResponse(dsize);
+                if (raw.Length < HEALTH_LEN)
+                {
+                    throw new RPLidarException("Incomplete health data");
+                }
+
+                string status = _healthStatuses.ContainsKey(raw[0]) ? _healthStatuses[raw[0]] : "Unknown";
+                int errorCode = (raw[1] << 8) + raw[2];
+                return (status, errorCode);
+            }
+            catch (RPLidarException ex)
+            {
+                if (attempt == maxRetries - 1)
+                {
+                    throw; // Relancer l'exception après le dernier essai
+                }
+                Thread.Sleep(50); // Attendre avant de réessayer
+            }
         }
-        SendCmd(GET_HEALTH_BYTE);
-        var (dsize, isSingle, dtype) = ReadDescriptor();
-        if (dsize != HEALTH_LEN || !isSingle || dtype != HEALTH_TYPE)
-        {
-            throw new RPLidarException("Wrong get_health reply");
-        }
-        byte[] raw = ReadResponse(dsize);
-        string status = _healthStatuses[raw[0]];
-        int errorCode = (raw[1] << 8) + raw[2];
-        return (status, errorCode);
+        throw new RPLidarException("Failed to get health status after multiple attempts");
     }
 
     public void CleanInput()
@@ -207,11 +234,16 @@ public class RPLidar
         {
             throw new RPLidarException("Scanning already running!");
         }
-        var (status, errorCode) = GetHealth();
+
+        // Vérifier l'état de santé du LIDAR
+        (string status, int errorCode) = GetHealth();
+
         if (status == "Error")
         {
+            // En cas d'erreur, réinitialiser le LIDAR
             Reset();
             (status, errorCode) = GetHealth();
+
             if (status == "Error")
             {
                 throw new RPLidarException($"RPLidar hardware failure. Error code: {errorCode}");
@@ -222,6 +254,7 @@ public class RPLidar
             Console.WriteLine($"Warning sensor status detected! Error code: {errorCode}");
         }
 
+        // Envoyer la commande de démarrage du scan
         byte cmd = GetScanTypeByte(scanType);
         if (scanType == "express")
         {
@@ -232,11 +265,16 @@ public class RPLidar
             SendCmd(cmd);
         }
 
+        // Lire le descripteur de réponse
         var (dsize, isSingle, dtype) = ReadDescriptor();
+
+        // Vérifier la validité de la réponse
         if (dsize != GetScanTypeSize(scanType) || isSingle || dtype != GetScanTypeResponse(scanType))
         {
+            CleanInput();
             throw new RPLidarException("Wrong scan reply");
         }
+
         _scanning = true;
     }
 
