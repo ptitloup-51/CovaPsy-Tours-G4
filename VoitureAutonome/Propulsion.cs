@@ -17,14 +17,17 @@ public class Thrust
     // Correction des valeurs pour correspondre au comportement attendu
     private const float _pwmMin = 8.10f / 100; // valeur min pour se déplacer
     private const float _pwmMax = 8.67f / 100; // Vitesse max
+    private const float _pwmNeutral = 7.5f / 100; // 1.5 ms (Neutre)
 
     private double DutyCycle;
 
     public Thrust()
     {
-        pwmMotor = PwmChannel.Create(0, 0, 50, _pwmMin); // Initialisation avec la position neutre
-        // SetSpeed(4);
+       
+        pwmMotor = PwmChannel.Create(0, 0, 50, _pwmNeutral); // Initialisation avec la position neutre
         pwmMotor.Start();
+        
+       
     }
 
     /// <summary>

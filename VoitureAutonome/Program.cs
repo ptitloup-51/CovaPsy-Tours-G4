@@ -8,7 +8,35 @@ public class Program
     { 
         Console.WriteLine("Hello World!");
       //  RemoteDebug debug = new();
+      
+      Steering stear = new Steering();
+      stear.Center();
+      
+  
 
+      for (int i = 0; i < 36; i++)
+      {
+          stear.SetDirection(-18 + i * 2);
+          Thread.Sleep(1000);
+      }
+      
+      stear.Dispose();
+      
+    
+      /*
+      Thrust thrust = new Thrust();
+      
+      
+      Thread.Sleep(1000);
+      
+      thrust.SetSpeed(10); // à 50% 
+      Thread.Sleep(4000);
+      thrust.SetSpeed(40); // à 50% 
+      Thread.Sleep(1000);
+      thrust.Dispose();
+      */
+      
+      /*
       
       #region lidar
 
@@ -31,12 +59,7 @@ public class Program
      // lidar.Start();
       
      
-        /*
-      foreach (var measure in lidar.IterMeasures())
-      {
-          Console.WriteLine($"New Scan: {measure.Item1}, Quality: {measure.Item2}, Angle: {measure.Item3}, Distance: {measure.Item4}");
-      }
-      */
+     
         
        
 
@@ -56,10 +79,15 @@ public class Program
 
       #endregion
       
+      */
+      
+      
       
       /*
       Steering steering = new Steering();
       Thrust thrust = new Thrust();
+
+      Thread.Sleep(1000);
       
       steering.SetDirection(30);
       Thread.Sleep(100);
