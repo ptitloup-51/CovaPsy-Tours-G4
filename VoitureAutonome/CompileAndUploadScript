@@ -48,7 +48,7 @@ sshpass -p "$REMOTE_PASS" ssh -t -o StrictHostKeyChecking=no $REMOTE_USER@$REMOT
 
     echo "🚀 Lancement de l'application en premier plan..."
     cd $REMOTE_DIR
-    ./VoitureAutonome
+    sudo -E ./VoitureAutonome
 EOF
 
 if [ $? -ne 0 ]; then

@@ -6,11 +6,40 @@ public class Program
     { 
         Console.WriteLine("Hello World!");
       //  RemoteDebug debug = new();
+
       
-     // Test test = new();
-    //  Thread.Sleep(10000);
+      #region lidar
+
+      
+      var lidar = new RPLidar("/dev/ttyUSB0", 256000);
+      lidar.Connect();
+      lidar.StopMotor();
+      Console.WriteLine("arret du lidar");
+      Thread.Sleep(3000);
+      Console.WriteLine("rotation du lidar");
+
+      var info = lidar.GetInfo();
+      Console.WriteLine($"Model: {info["model"]}, Serial: {info["serialnumber"]}");
+
+      var health = lidar.GetHealth();
+      Console.WriteLine($"Health: {health.Item1}, Error Code: {health.Item2}");
+
+      lidar.StartMotor();
+      
+     
+
+      foreach (var measure in lidar.IterMeasures())
+      {
+          Console.WriteLine($"New Scan: {measure.Item1}, Quality: {measure.Item2}, Angle: {measure.Item3}, Distance: {measure.Item4}");
+      }
+
+      lidar.StopMotor();
+      lidar.Disconnect();
+
+      #endregion
       
       
+      /*
       Steering steering = new Steering();
       Thrust thrust = new Thrust();
       
@@ -28,7 +57,7 @@ public class Program
       thrust.Dispose();
       steering.Dispose();         // Arrête et libère les ressources
       
-      
+      */
       
       /*
         Thrust thrust = new Thrust();

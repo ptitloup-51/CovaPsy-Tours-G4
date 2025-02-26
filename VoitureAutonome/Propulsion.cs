@@ -23,6 +23,7 @@ public class Thrust
     public Thrust()
     {
         pwmMotor = PwmChannel.Create(0, 0, 50, _pwmMin); // Initialisation avec la position neutre
+        // SetSpeed(4);
         pwmMotor.Start();
     }
 

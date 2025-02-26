@@ -20,6 +20,7 @@
           "net8.0"
         ],
         "sources": {
+          "/Users/loup/NuGet/": {},
           "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -44,9 +45,37 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BarbaSoft.RPLidarA1": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            },
+            "Bsa.RpLidar": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            },
+            "IronPython": {
+              "target": "Package",
+              "version": "[3.4.2, )"
+            },
             "Microsoft.Extensions.Logging": {
               "target": "Package",
               "version": "[9.0.1, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "RPLidar4Net.Api": {
+              "target": "Package",
+              "version": "[0.3.0, )"
+            },
+            "RPLidar4Net.IO": {
+              "target": "Package",
+              "version": "[0.4.0, )"
+            },
+            "SerialPortStream": {
+              "target": "Package",
+              "version": "[2.4.2, )"
             },
             "System.Device.Gpio": {
               "target": "Package",
@@ -54,7 +83,11 @@
             },
             "System.IO.Ports": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[9.0.2, )"
+            },
+            "pythonnet": {
+              "target": "Package",
+              "version": "[3.1.0-preview2024-09-06, )"
             }
           },
           "imports": [
