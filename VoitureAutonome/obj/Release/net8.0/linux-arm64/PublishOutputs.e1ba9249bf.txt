@@ -1,0 +1,13 @@
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/VoitureAutonome
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/VoitureAutonome.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/VoitureAutonome.deps.json
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/VoitureAutonome.runtimeconfig.json
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/VoitureAutonome.pdb
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/RPLidar4Net.Api.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/RPLidar4Net.Core.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/RPLidar4Net.DataDump.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/RPLidar4Net.IO.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/Serilog.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/System.Device.Gpio.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/System.IO.Ports.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/publish/libSystem.IO.Ports.Native.so
