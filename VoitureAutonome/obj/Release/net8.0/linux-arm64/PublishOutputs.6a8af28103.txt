@@ -18,6 +18,7 @@
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Microsoft.Extensions.Logging.Abstractions.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Microsoft.Extensions.Options.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Microsoft.Extensions.Primitives.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Microsoft.Win32.SystemEvents.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Mono.Unix.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Newtonsoft.Json.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Python.Runtime.dll
@@ -26,9 +27,19 @@
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/RPLidar4Net.IO.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/RJCP.SerialPortStream.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Serilog.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/SixLabors.Fonts.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/SixLabors.ImageSharp.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/SixLabors.ImageSharp.Drawing.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/System.CodeDom.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/System.Device.Gpio.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/System.Diagnostics.DiagnosticSource.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/System.Drawing.Common.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/System.Private.Windows.Core.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/System.Private.Windows.GdiPlus.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/System.IO.Ports.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Unosquare.Raspberry.Abstractions.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Unosquare.RaspberryIO.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Swan.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/Swan.Lite.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/libMono.Unix.so
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/publish_output/libSystem.IO.Ports.Native.so
