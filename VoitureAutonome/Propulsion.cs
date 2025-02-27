@@ -3,6 +3,8 @@ using System.Device.Pwm;
 using System.Device.Gpio;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.IO.Ports;
+using System.Device.Spi;
 
 
 namespace VoitureAutonome;
@@ -156,7 +158,66 @@ public class Steering
         Console.WriteLine("PWM direction arrêté proprement.");
     }
 }
+/*
+public class AcquireSpeed;
+{
+    private SpiDevice spi;
 
+    // Constructeur : Initialise la communication SPI
+    public SpeedSensor(int busId = 0, int chipSelect = 0)
+    {
+        spi = SpiDevice.Create(new SpiConnectionSettings(busId, chipSelect)
+        {
+            ClockFrequency = 500000, // Fréquence SPI (ajuster si nécessaire)
+            Mode = SpiMode.Mode0 // Mode de communication SPI (ajuster selon le STM32)
+        });
+    }
+
+    // Méthode pour récupérer la vitesse depuis le STM32
+    public int GetSpeed()
+    {
+        byte[] buffer = new byte[2]; // Tableau pour stocker les 2 octets de la vitesse
+        spi.Read(buffer); // Lire les données SPI envoyées par le STM32
+
+        // Convertir les 2 octets en un entier (Big Endian : MSB en premier)
+        return (buffer[0] << 8) | buffer[1];
+    }
+
+    // Programme principal : Affiche la vitesse en boucle
+    public static void Main()
+    {
+        var sensor = new SpeedSensor(); // Création de l'objet capteur
+
+        while (true) // Boucle infinie pour lire la vitesse en continu
+        {
+            Console.WriteLine($"Vitesse: {sensor.GetSpeed()} RPM"); // Affichage de la vitesse
+            System.Threading.Thread.Sleep(100); // Pause de 100ms avant la prochaine lecture
+        }
+    }
+}
+*/
+public class TestSpeed
+{
+    public static void Test()
+    {
+        var spi = SpiDevice.Create(new SpiConnectionSettings(0, 0)
+        {
+            ClockFrequency = 500000, // Ajustable selon ton STM32
+            Mode = SpiMode.Mode0
+        });
+
+        byte[] buffer = new byte[10]; // Essayer de lire plus d'octets que prévu
+        spi.Read(buffer);
+
+        Console.Write("Données SPI reçues : ");
+        foreach (var b in buffer)
+        {
+            Console.Write($"{b:X2} "); // Affiche chaque octet en hexadécimal
+        }
+
+        Console.WriteLine();
+    }
+}
 
  
 
