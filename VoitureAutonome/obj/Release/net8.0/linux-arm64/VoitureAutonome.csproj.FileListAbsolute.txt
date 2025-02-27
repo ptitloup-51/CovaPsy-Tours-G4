@@ -44,3 +44,14 @@
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/RPLidar4Net.Core.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/RPLidar4Net.IO.dll
 /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/Serilog.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/Unosquare.Raspberry.Abstractions.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/Unosquare.RaspberryIO.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/Swan.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/Swan.Lite.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/Microsoft.Win32.SystemEvents.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/System.Drawing.Common.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/System.Private.Windows.Core.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/System.Private.Windows.GdiPlus.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/SixLabors.ImageSharp.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/SixLabors.Fonts.dll
+/Users/loup/Documents/GitHub/SAES6/VoitureAutonome/bin/Release/net8.0/linux-arm64/SixLabors.ImageSharp.Drawing.dll
