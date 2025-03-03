@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = VoitureAutonome
-build_property.ProjectDir = /Users/loup/Documents/GitHub/SAES6/VoitureAutonome/
+build_property.ProjectDir = /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

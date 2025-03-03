@@ -14,6 +14,7 @@ namespace VoitureAutonome
         private int _imageSize;
         private int _center;
         private float _scale;
+        public int Points;
 
         public LidarMapGenerator(int imageSize = 1000, float scale = 1.0f)
         {
@@ -24,6 +25,7 @@ namespace VoitureAutonome
 
         public Image<Rgba32> GenerateMap(Dictionary<int, (bool valid, int quality, double exactAngle, double distance)> angleMeasures)
         {
+            Points = angleMeasures.Keys.Count;
             // Créer une image vide
             using Image<Rgba32> image = new Image<Rgba32>(_imageSize, _imageSize);
 

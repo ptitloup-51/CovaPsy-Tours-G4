@@ -1,133 +1,65 @@
-using System.Drawing;
+using VoitureAutonome;
+using System;
+using System.Threading;
 
-namespace VoitureAutonome;
-
-public class Program
+class Program
 {
-    public static void Main(string[] args)
+    static void Main(string[] args)
     {
-        Console.WriteLine("Hello World!");
-        //  RemoteDebug debug = new();
-
-
-        // Gestion Camera
         /*
-          var targetPath = "/home/covapsytours5/Documents/picture.jpg";
-          var process = new Process
-          {
-              StartInfo = new ProcessStartInfo
-              {
-                  FileName = "libcamera-still",
-                  Arguments = $"-o {targetPath}",
-                  RedirectStandardOutput = true,
-                  UseShellExecute = false,
-                  CreateNoWindow = true
-              }
-          };
-          process.Start();
-          process.WaitForExit();
-
-          Console.WriteLine("Photo prise avec libcamera-still !");
-
-          */
-
-
-        /*
-        Steering stear = new Steering();
-        stear.Center();
-
-        for (int i = 0; i < 20; i++)
-        {
-            Thread.Sleep(500);
-            stear.SetDirection(-18);
-            Thread.Sleep(500);
-            stear.Center();
-            Thread.Sleep(500);
-            stear.SetDirection(18);
-        }
-
-
-
-
-        stear.Dispose();
-        */
-
-        /*
-        Thrust thrust = new Thrust();
-
-
-        Thread.Sleep(1000);
-
-        thrust.SetSpeed(10); // à 50%
-        Thread.Sleep(4000);
-        thrust.SetSpeed(40); // à 50%
-        Thread.Sleep(1000);
-        thrust.Dispose();
-        */
-
-
-        #region lidar
-
-        Lidar lidar = new Lidar();
-        lidar.Mesure();
-       // lidar.PrintResult();
-        lidar.PictureResult();
-        Console.WriteLine("photo prise !");
-
-        #endregion
-
-
-        /*
-
-        Steering steering = new Steering();
-        Thrust thrust = new Thrust();
-
-        Thread.Sleep(1000);
-
-        steering.SetDirection(30);
-        Thread.Sleep(100);
-
-        steering.Center();
-        thrust.SetSpeed(5);
-
-        Thread.Sleep(1000);
-        steering.SetDirection(70);
+        Thrust th = new Thrust();
         Thread.Sleep(5000);
-
-
-        thrust.Dispose();
-        steering.Dispose();         // Arrête et libère les ressources
-
+        th.SetSpeed(20);
+        Thread.Sleep(5000);
+        th.SetSpeed(40);
+        Thread.Sleep(5000);
+        th.Dispose();
         */
-
-        /*
-          Thrust thrust = new Thrust();
-          thrust.SetSpeed(10); // à 50%
-          Thread.Sleep(4000);
-          thrust.SetSpeed(40); // à 50%
-          Thread.Sleep(1000);
-          thrust.Dispose();
-          */
-
-        // Lidar lid = new();
-
-        //Direction dir = new Direction();
-        // dir.SetDirectionDegre(10);
-        //  Thread.Sleep(5000);
-        //  Direction.Dispose();
-
-        /*
-         Thrust thrust = new Thrust();
-         thrust.SetSpeed(10); // à 50%
-         Thread.Sleep(2000);
-         thrust.SetSpeed(0);
-         Thread.Sleep(1000);
-         thrust.SetSpeed(10); // à -10%
-         Thread.Sleep(2000);
-         thrust.Dispose(); //supprime l'objet
-         */
-
-
-        Console.ReadLine();
+        
+        
+        
+        // Créer le répertoire pour les images si nécessaire
+        string imageDir = "/home/covapsytours5/Documents/images/";
+        Directory.CreateDirectory(imageDir);
+        
+        Console.WriteLine("Démarrage du système de cartographie LIDAR...");
+        
+        // Durée d'exécution (en secondes) - à ajuster selon vos besoins
+        int runDuration = 10;
+        
+        using (var lidar = new ContinuousLidar())
+        {
+            try
+            {
+                // Démarrer la cartographie continue avec:
+                // - Prise de mesures toutes les 100ms
+                // - Génération d'images toutes les 500ms
+                lidar.StartContinuousMapping(scanIntervalMs: 100, imageIntervalMs: 500);
+                
+                Console.WriteLine($"Cartographie en cours pour {runDuration} secondes...");
+                
+                // Exécuter pendant une durée fixe au lieu d'attendre une entrée console
+                // Solution pour éviter l'erreur Console.ReadKey
+                for (int i = 0; i < runDuration; i++)
+                {
+                    Thread.Sleep(1000);
+                    if (i % 5 == 0)
+                    {
+                        Console.WriteLine($"Temps écoulé: {i} secondes");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur: {ex.Message}");
+            }
+            finally
+            {
+                // S'assurer que le lidar est correctement arrêté
+                lidar.StopContinuousMapping();
+                Console.WriteLine("Système de cartographie arrêté.");
+            }
+        }
+        
     }
 }
