@@ -15,14 +15,13 @@ public class ContinuousLidar : IDisposable
     private ConcurrentBag<(bool valid, int quality, double angle, double distance)> validMeasures = new();
     
     private bool isRunning = false;
-    private readonly CancellationTokenSource cancellationTokenSource = new();
+    private CancellationTokenSource cancellationTokenSource;
     
-    private int maxMeasuresPerScan = 180; // Réduit pour améliorer la vitesse
+    private int maxMeasuresPerScan = 350; // Réduit pour améliorer la vitesse
     private readonly string lidarPort;
     private readonly int lidarBaudRate;
     private readonly object lockObject = new object();
     private readonly string imageDirectory;
-    private int imageCounter = 0;
     
     // Indicateur pour éviter la réinitialisation en boucle
     private bool isReconnecting = false;
@@ -68,29 +67,41 @@ public class ContinuousLidar : IDisposable
         }
     }
     
-    public void StartContinuousMapping(int scanIntervalMs = 100, int imageIntervalMs = 500)
+    // Fonction simple pour démarrer le scan continu de manière asynchrone
+    public async Task StartContinuousScanAsync(int scanIntervalMs = 100)
     {
         if (isRunning)
             return;
             
         isRunning = true;
+        cancellationTokenSource = new CancellationTokenSource();
         
         // Démarrer le thread de mesure continue
+        await Task.Run(() => ContinuousMeasurementLoop(scanIntervalMs), cancellationTokenSource.Token);
+    }
+    
+    // Version non-async pour usage simple
+    public void StartContinuousScan(int scanIntervalMs = 100)
+    {
+        if (isRunning)
+            return;
+            
+        isRunning = true;
+        cancellationTokenSource = new CancellationTokenSource();
+        
+        // Démarrer le thread de mesure continue en arrière-plan
         Task.Run(() => ContinuousMeasurementLoop(scanIntervalMs), cancellationTokenSource.Token);
-        
-        // Démarrer le thread de génération d'images
-        Task.Run(() => ImageGenerationLoop(imageIntervalMs), cancellationTokenSource.Token);
-        
         Console.WriteLine("Cartographie continue démarrée");
     }
     
-    public void StopContinuousMapping()
+    // Fonction simple pour arrêter le scan continu
+    public void StopContinuousScan()
     {
         if (!isRunning)
             return;
             
         isRunning = false;
-        cancellationTokenSource.Cancel();
+        cancellationTokenSource?.Cancel();
         
         // Attendre un peu pour que les threads s'arrêtent proprement
         Thread.Sleep(500);
@@ -113,6 +124,75 @@ public class ContinuousLidar : IDisposable
         Console.WriteLine("Cartographie continue arrêtée");
     }
     
+    // Fonction simple pour prendre une photo PNG avec nom personnalisé
+    public void TakePhoto(string photoName)
+    {
+        try
+        {
+            string filename = $"{imageDirectory}{photoName}.png";
+            GenerateImage(filename);
+            Console.WriteLine($"Photo sauvegardée: {filename}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erreur lors de la génération de l'image: {ex.Message}");
+        }
+    }
+    
+    // Fonction pour obtenir la distance à un angle spécifique
+    public double GetDistanceAtAngle(int angle)
+    {
+        // Normaliser l'angle entre 0 et 359
+        angle = ((angle % 360) + 360) % 360;
+        
+        // Vérifier si l'angle existe dans nos mesures
+        if (angleMeasures.TryGetValue(angle, out var measure))
+        {
+            return measure.distance;
+        }
+        
+        // Si l'angle n'existe pas, essayer de l'interpoler à partir des angles voisins
+        var keys = angleMeasures.Keys.ToList();
+        if (keys.Count < 2)
+            return 0; // Pas assez de données
+            
+        // Trouver les angles les plus proches
+        int lowerAngle = -1, upperAngle = -1;
+        foreach (var key in keys)
+        {
+            if (key < angle && (lowerAngle == -1 || key > lowerAngle))
+                lowerAngle = key;
+            if (key > angle && (upperAngle == -1 || key < upperAngle))
+                upperAngle = key;
+        }
+        
+        // Si pas d'angle inférieur, utiliser le plus grand
+        if (lowerAngle == -1)
+            lowerAngle = keys.Max();
+            
+        // Si pas d'angle supérieur, utiliser le plus petit
+        if (upperAngle == -1)
+            upperAngle = keys.Min();
+            
+        // Obtenir les distances aux angles voisins
+        if (angleMeasures.TryGetValue(lowerAngle, out var lowerMeasure) && 
+            angleMeasures.TryGetValue(upperAngle, out var upperMeasure))
+        {
+            // Interpolation linéaire
+            double ratio;
+            if (upperAngle > lowerAngle)
+                ratio = (angle - lowerAngle) / (double)(upperAngle - lowerAngle);
+            else
+                ratio = (angle - lowerAngle) / (double)((upperAngle + 360) - lowerAngle);
+                
+            return lowerMeasure.distance + ratio * (upperMeasure.distance - lowerMeasure.distance);
+        }
+        
+        return 0; // Pas de données disponibles
+    }
+
+    public long TotalTime = 0;
+    public int count = 0;
     private async Task ContinuousMeasurementLoop(int intervalMs)
     {
         int errorCount = 0;
@@ -134,6 +214,8 @@ public class ContinuousLidar : IDisposable
                 
                 // Afficher le temps de mesure pour le débogage
                 Console.WriteLine($"Temps de mesure: {sw.ElapsedMilliseconds}ms");
+                TotalTime += sw.ElapsedMilliseconds;
+                count++;
                 
                 // Attendre l'intervalle spécifié moins le temps déjà écoulé
                 int delayTime = Math.Max(0, intervalMs - (int)sw.ElapsedMilliseconds);
@@ -180,57 +262,6 @@ public class ContinuousLidar : IDisposable
                 }
                 
                 // Attendre avant de réessayer
-                if (isRunning)
-                    await Task.Delay(1000, cancellationTokenSource.Token);
-            }
-        }
-    }
-    
-    private async Task ImageGenerationLoop(int intervalMs)
-    {
-        while (!cancellationTokenSource.Token.IsCancellationRequested && isRunning)
-        {
-            try
-            {
-                Stopwatch sw = new();
-                sw.Start();
-                
-                // Vérifier si nous avons des données suffisantes pour générer une image
-                if (angleMeasures.Count > 0)
-                {
-                    // Générer l'image
-                    string filename = $"{imageDirectory}lidar_map_{imageCounter++}.png";
-                    GenerateImage(filename);
-                    
-                    sw.Stop();
-                    
-                    // Afficher le temps de génération d'image pour le débogage
-                    Console.WriteLine($"Temps de génération d'image: {sw.ElapsedMilliseconds}ms");
-                }
-                else
-                {
-                    Console.WriteLine("Pas assez de données pour générer une image");
-                }
-                
-                // Attendre l'intervalle spécifié moins le temps déjà écoulé
-                int delayTime = intervalMs;
-                if (sw.IsRunning)
-                {
-                    sw.Stop();
-                    delayTime = Math.Max(0, intervalMs - (int)sw.ElapsedMilliseconds);
-                }
-                
-                if (delayTime > 0 && isRunning)
-                    await Task.Delay(delayTime, cancellationTokenSource.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                // Normal lors de l'annulation
-                break;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur dans la boucle de génération d'images: {ex.Message}");
                 if (isRunning)
                     await Task.Delay(1000, cancellationTokenSource.Token);
             }
@@ -454,23 +485,9 @@ public class ContinuousLidar : IDisposable
         }
     }
     
-    // Propriété pour accéder aux mesures actuelles
-    public IReadOnlyDictionary<int, (bool valid, int quality, double exactAngle, double distance)> CurrentMeasures
-    {
-        get
-        {
-            var snapshot = new Dictionary<int, (bool valid, int quality, double exactAngle, double distance)>();
-            foreach (var pair in angleMeasures)
-            {
-                snapshot[pair.Key] = pair.Value;
-            }
-            return snapshot;
-        }
-    }
-    
     // Implémentation de IDisposable pour nettoyer les ressources
     public void Dispose()
     {
-        StopContinuousMapping();
+        StopContinuousScan();
     }
 }
