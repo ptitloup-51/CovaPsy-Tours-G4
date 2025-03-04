@@ -196,28 +196,6 @@ public class AcquireSpeed;
     }
 }
 */
-public class TestSpeed
-{
-    public static void Test()
-    {
-        var spi = SpiDevice.Create(new SpiConnectionSettings(0, 0)
-        {
-            ClockFrequency = 500000, // Ajustable selon ton STM32
-            Mode = SpiMode.Mode0
-        });
-
-        byte[] buffer = new byte[10]; // Essayer de lire plus d'octets que prévu
-        spi.Read(buffer);
-
-        Console.Write("Données SPI reçues : ");
-        foreach (var b in buffer)
-        {
-            Console.Write($"{b:X2} "); // Affiche chaque octet en hexadécimal
-        }
-
-        Console.WriteLine();
-    }
-}
 
  
 
