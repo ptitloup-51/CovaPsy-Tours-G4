@@ -2,11 +2,15 @@ using VoitureAutonome;
 using System;
 using System.Diagnostics;
 using System.Threading;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 class Program
 {
     static void Main(string[] args)
     {
+        
+        
         /*
         Thrust th = new Thrust();
         Thread.Sleep(5000);
@@ -18,22 +22,33 @@ class Program
         */
          
         
-        
+        /*
+        TestSpeed testSpeed = new TestSpeed();
+        testSpeed.Speed();
+        */
+
+
+        ColorAverage cv = new();
+        Console.WriteLine(cv.GetAvergageColor(true));
+
+
+        /*
+
         // Créer une instance de ContinuousLidar
         var lidar = new ContinuousLidar();
 
         // Démarrer le scan continu
         lidar.StartContinuousScan();
         Thread.Sleep(4000);
-        
-        
-        
+
+
+
         for (int i = 0; i < 20; i++)
         {
             // Prendre une photo quand vous le souhaitez
             lidar.TakePhoto($"ma_photo{i}");
         }
-        
+
         Console.WriteLine($"Temps moyen: {lidar.TotalTime / lidar.count}");
 
         // Obtenir la distance à un angle spécifique
@@ -41,7 +56,8 @@ class Program
 
         // Arrêter le scan quand vous avez terminé
         lidar.StopContinuousScan();
-       
-        
+
+       */
+
     }
 }
