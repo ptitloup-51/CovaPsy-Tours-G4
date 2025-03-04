@@ -16,6 +16,7 @@ class Program
         Thread.Sleep(5000);
         th.Dispose();
         */
+         
         
         
         // Créer une instance de ContinuousLidar
