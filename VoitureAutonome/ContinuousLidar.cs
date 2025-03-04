@@ -1,493 +1,342 @@
-using System.Diagnostics;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VoitureAutonome;
-
-public class ContinuousLidar : IDisposable
+namespace VoitureAutonome
 {
-    private RPLidar lidar;
-    private Dictionary<string, object> Info;
-    private (string, int) Health;
-    
-    private ConcurrentDictionary<int, (bool valid, int quality, double exactAngle, double distance)> angleMeasures = new();
-    private ConcurrentBag<(bool valid, int quality, double angle, double distance)> validMeasures = new();
-    
-    private bool isRunning = false;
-    private CancellationTokenSource cancellationTokenSource;
-    
-    private int maxMeasuresPerScan = 350; // Réduit pour améliorer la vitesse
-    private readonly string lidarPort;
-    private readonly int lidarBaudRate;
-    private readonly object lockObject = new object();
-    private readonly string imageDirectory;
-    
-    // Indicateur pour éviter la réinitialisation en boucle
-    private bool isReconnecting = false;
-    
-    public ContinuousLidar(string port = "/dev/ttyUSB0", int baudRate = 256000, string imageDir = "/home/covapsytours5/Documents/images/")
+    public class ContinuousLidar : IDisposable
     {
-        lidarPort = port;
-        lidarBaudRate = baudRate;
-        imageDirectory = imageDir;
-        
-        // S'assurer que le répertoire d'images existe
-        Directory.CreateDirectory(imageDirectory);
-        
-        // Initialiser le LIDAR
-        InitializeLidar();
-    }
-    
-    private void InitializeLidar()
-    {
-        try
-        {
-            lidar = new RPLidar(lidarPort, lidarBaudRate);
-            
-            lidar.Connect();
-            lidar.StopMotor();
-            
-            // Essayons de nettoyer et réinitialiser le LIDAR avant de commencer
-            lidar.CleanInput();
-            lidar.Reset();  // Ajout d'une réinitialisation complète
-            Thread.Sleep(1000);  // Attendre après la réinitialisation
-            
-            Info = lidar.GetInfo();
-            if (Info == null) 
-                Console.WriteLine("Impossible d'obtenir les informations du LIDAR");
+        private RPLidar lidar;
+        private Dictionary<string, object> Info;
+        private (string, int) Health;
 
-            Health = lidar.GetHealth();
-            lidar.CleanInput();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erreur d'initialisation du LIDAR: {ex.Message}");
-            throw;
-        }
-    }
-    
-    // Fonction simple pour démarrer le scan continu de manière asynchrone
-    public async Task StartContinuousScanAsync(int scanIntervalMs = 100)
-    {
-        if (isRunning)
-            return;
-            
-        isRunning = true;
-        cancellationTokenSource = new CancellationTokenSource();
-        
-        // Démarrer le thread de mesure continue
-        await Task.Run(() => ContinuousMeasurementLoop(scanIntervalMs), cancellationTokenSource.Token);
-    }
-    
-    // Version non-async pour usage simple
-    public void StartContinuousScan(int scanIntervalMs = 100)
-    {
-        if (isRunning)
-            return;
-            
-        isRunning = true;
-        cancellationTokenSource = new CancellationTokenSource();
-        
-        // Démarrer le thread de mesure continue en arrière-plan
-        Task.Run(() => ContinuousMeasurementLoop(scanIntervalMs), cancellationTokenSource.Token);
-        Console.WriteLine("Cartographie continue démarrée");
-    }
-    
-    // Fonction simple pour arrêter le scan continu
-    public void StopContinuousScan()
-    {
-        if (!isRunning)
-            return;
-            
-        isRunning = false;
-        cancellationTokenSource?.Cancel();
-        
-        // Attendre un peu pour que les threads s'arrêtent proprement
-        Thread.Sleep(500);
-        
-        // Arrêter le LIDAR
-        try
-        {
-            if (lidar != null)
-            {
-                try { lidar.Stop(); } catch { }
-                try { lidar.StopMotor(); } catch { }
-                try { lidar.Disconnect(); } catch { }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erreur lors de l'arrêt du LIDAR: {ex.Message}");
-        }
-        
-        Console.WriteLine("Cartographie continue arrêtée");
-    }
-    
-    // Fonction simple pour prendre une photo PNG avec nom personnalisé
-    public void TakePhoto(string photoName)
-    {
-        try
-        {
-            string filename = $"{imageDirectory}{photoName}.png";
-            GenerateImage(filename);
-            Console.WriteLine($"Photo sauvegardée: {filename}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erreur lors de la génération de l'image: {ex.Message}");
-        }
-    }
-    
-    // Fonction pour obtenir la distance à un angle spécifique
-    public double GetDistanceAtAngle(int angle)
-    {
-        // Normaliser l'angle entre 0 et 359
-        angle = ((angle % 360) + 360) % 360;
-        
-        // Vérifier si l'angle existe dans nos mesures
-        if (angleMeasures.TryGetValue(angle, out var measure))
-        {
-            return measure.distance;
-        }
-        
-        // Si l'angle n'existe pas, essayer de l'interpoler à partir des angles voisins
-        var keys = angleMeasures.Keys.ToList();
-        if (keys.Count < 2)
-            return 0; // Pas assez de données
-            
-        // Trouver les angles les plus proches
-        int lowerAngle = -1, upperAngle = -1;
-        foreach (var key in keys)
-        {
-            if (key < angle && (lowerAngle == -1 || key > lowerAngle))
-                lowerAngle = key;
-            if (key > angle && (upperAngle == -1 || key < upperAngle))
-                upperAngle = key;
-        }
-        
-        // Si pas d'angle inférieur, utiliser le plus grand
-        if (lowerAngle == -1)
-            lowerAngle = keys.Max();
-            
-        // Si pas d'angle supérieur, utiliser le plus petit
-        if (upperAngle == -1)
-            upperAngle = keys.Min();
-            
-        // Obtenir les distances aux angles voisins
-        if (angleMeasures.TryGetValue(lowerAngle, out var lowerMeasure) && 
-            angleMeasures.TryGetValue(upperAngle, out var upperMeasure))
-        {
-            // Interpolation linéaire
-            double ratio;
-            if (upperAngle > lowerAngle)
-                ratio = (angle - lowerAngle) / (double)(upperAngle - lowerAngle);
-            else
-                ratio = (angle - lowerAngle) / (double)((upperAngle + 360) - lowerAngle);
-                
-            return lowerMeasure.distance + ratio * (upperMeasure.distance - lowerMeasure.distance);
-        }
-        
-        return 0; // Pas de données disponibles
-    }
+        private ConcurrentDictionary<int, (bool valid, int quality, double exactAngle, double distance)> angleMeasures = new();
+        private ConcurrentBag<(bool valid, int quality, double angle, double distance)> validMeasures = new();
 
-    public long TotalTime = 0;
-    public int count = 0;
-    private async Task ContinuousMeasurementLoop(int intervalMs)
-    {
-        int errorCount = 0;
-        
-        while (!cancellationTokenSource.Token.IsCancellationRequested && isRunning)
+        private bool isRunning = false;
+        private CancellationTokenSource cancellationTokenSource;
+
+        private int maxMeasuresPerScan = 180; // Réduit pour améliorer la vitesse
+        private readonly string lidarPort;
+        private readonly int lidarBaudRate;
+        private readonly object lockObject = new();
+        private readonly string imageDirectory;
+
+        private bool isReconnecting = false;
+
+        public ContinuousLidar(string port = "/dev/ttyUSB0", int baudRate = 256000, string imageDir = "/home/covapsytours5/Documents/images/")
+        {
+            lidarPort = port;
+            lidarBaudRate = baudRate;
+            imageDirectory = imageDir;
+
+            Directory.CreateDirectory(imageDirectory); // S'assurer que le répertoire d'images existe
+            InitializeLidar(); // Initialiser le LIDAR
+        }
+
+        private void InitializeLidar()
         {
             try
             {
-                Stopwatch sw = new();
-                sw.Start();
-                
-                // Obtenir une nouvelle mesure
-                PerformQuickMeasurement();
-                
-                // Réinitialiser le compteur d'erreurs après une mesure réussie
-                errorCount = 0;
-                
-                sw.Stop();
-                
-                // Afficher le temps de mesure pour le débogage
-                Console.WriteLine($"Temps de mesure: {sw.ElapsedMilliseconds}ms");
-                TotalTime += sw.ElapsedMilliseconds;
-                count++;
-                
-                // Attendre l'intervalle spécifié moins le temps déjà écoulé
-                int delayTime = Math.Max(0, intervalMs - (int)sw.ElapsedMilliseconds);
-                if (delayTime > 0 && isRunning)
-                    await Task.Delay(delayTime, cancellationTokenSource.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                // Normal lors de l'annulation
-                break;
+                lidar = new RPLidar(lidarPort, lidarBaudRate);
+                lidar.Connect();
+                lidar.StopMotor();
+
+                lidar.CleanInput();
+                lidar.Reset(); // Réinitialisation complète
+                Thread.Sleep(1000); // Attendre après la réinitialisation
+
+                Info = lidar.GetInfo();
+                if (Info == null)
+                    Console.WriteLine("Impossible d'obtenir les informations du LIDAR");
+
+                Health = lidar.GetHealth();
+                lidar.CleanInput();
             }
             catch (Exception ex)
             {
-                errorCount++;
-                Console.WriteLine($"Erreur dans la boucle de mesure: {ex.Message}");
-                
-                // Si trop d'erreurs consécutives, essayer de réinitialiser le LIDAR
-                if (errorCount > 3 && !isReconnecting && isRunning)
-                {
-                    isReconnecting = true;
-                    Console.WriteLine("Tentative de réinitialisation du LIDAR après plusieurs échecs...");
-                    
-                    try
-                    {
-                        lock (lockObject)
-                        {
-                            try { lidar.Stop(); } catch { }
-                            try { lidar.StopMotor(); } catch { }
-                            try { lidar.Disconnect(); } catch { }
-                            
-                            Thread.Sleep(2000);
-                            InitializeLidar();
-                            errorCount = 0;
-                        }
-                    }
-                    catch (Exception resetEx)
-                    {
-                        Console.WriteLine($"Échec de la réinitialisation du LIDAR: {resetEx.Message}");
-                    }
-                    finally
-                    {
-                        isReconnecting = false;
-                    }
-                }
-                
-                // Attendre avant de réessayer
-                if (isRunning)
-                    await Task.Delay(1000, cancellationTokenSource.Token);
-            }
-        }
-    }
-    
-    private void PerformQuickMeasurement()
-    {
-        lock (lockObject)
-        {
-            if (!isRunning)
-                return;
-                
-            // Nettoyer les mesures précédentes pour cette itération
-            var newValidMeasures = new ConcurrentBag<(bool valid, int quality, double angle, double distance)>();
-            
-            try
-            {
-                // Vérifier que le LIDAR est connecté
-                if (lidar == null)
-                {
-                    InitializeLidar();
-                    Thread.Sleep(500);
-                }
-                
-                lidar.CleanInput();
-                
-                // Utiliser "normal" car le mode express semble causer des problèmes
-                string mode = "normal";
-                
-                // Démarrer le moteur avant le scan
-                lidar.StartMotor();
-                Thread.Sleep(200);  // Laisser le moteur atteindre sa vitesse
-                
-                lidar.Start(mode);
-                
-                var measureCount = 0;
-                
-                var mesure = lidar.IterMeasures(mode);
-                
-                // Collecter un nombre limité de mesures pour assurer la rapidité
-                foreach (var mes in mesure)
-                {
-                    measureCount++;
-                    if (measureCount > maxMeasuresPerScan) break;
-
-                    double angle = mes.Item3;
-
-                    // Normaliser l'angle entre 0 et 360
-                    while (angle < 0) angle += 360;
-                    while (angle >= 360) angle -= 360;
-
-                    // Ne conserver que les mesures avec distance non nulle
-                    if (mes.Item4 > 0)
-                    {
-                        // Trouver l'angle entier le plus proche
-                        var closestIntAngle = (int)Math.Round(angle);
-                        if (closestIntAngle == 360) closestIntAngle = 0;
-
-                        // Mettre à jour les mesures d'angle de manière thread-safe
-                        angleMeasures[closestIntAngle] = (mes.Item1, mes.Item2, angle, mes.Item4);
-
-                        // Ajouter à la liste des mesures valides
-                        newValidMeasures.Add((mes.Item1, mes.Item2, angle, mes.Item4));
-                    }
-                }
-                
-                // Mettre à jour les mesures valides
-                validMeasures = newValidMeasures;
-                
-                // Remplir les angles manquants pour compléter la carte
-                FillMissingAngles();
-                
-                // Arrêter le scan après avoir collecté les données
-                lidar.Stop();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Erreur lors de la mesure: {e.Message}");
+                Console.WriteLine($"Erreur d'initialisation du LIDAR: {ex.Message}");
                 throw;
             }
-            finally
+        }
+
+        public async Task StartContinuousScanAsync(int scanIntervalMs = 50) // Intervalle réduit pour plus de rapidité
+        {
+            if (isRunning) return;
+
+            isRunning = true;
+            cancellationTokenSource = new CancellationTokenSource();
+
+            await Task.Run(() => ContinuousMeasurementLoop(scanIntervalMs), cancellationTokenSource.Token);
+        }
+
+        public void StartContinuousScan(int scanIntervalMs = 50) // Version non-async
+        {
+            if (isRunning) return;
+
+            isRunning = true;
+            cancellationTokenSource = new CancellationTokenSource();
+
+            Task.Run(() => ContinuousMeasurementLoop(scanIntervalMs), cancellationTokenSource.Token);
+            Console.WriteLine("Cartographie continue démarrée");
+        }
+
+        public void StopContinuousScan()
+        {
+            if (!isRunning) return;
+
+            isRunning = false;
+            cancellationTokenSource?.Cancel();
+
+            Thread.Sleep(500); // Attendre un peu pour que les threads s'arrêtent proprement
+
+            try
+            {
+                if (lidar != null)
+                {
+                    try { lidar.Stop(); } catch { }
+                    try { lidar.StopMotor(); } catch { }
+                    try { lidar.Disconnect(); } catch { }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur lors de l'arrêt du LIDAR: {ex.Message}");
+            }
+
+            Console.WriteLine("Cartographie continue arrêtée");
+        }
+
+        public void TakePhoto(string photoName)
+        {
+            try
+            {
+                string filename = $"{imageDirectory}{photoName}.png";
+                GenerateImage(filename);
+                Console.WriteLine($"Photo sauvegardée: {filename}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur lors de la génération de l'image: {ex.Message}");
+            }
+        }
+
+        public double GetDistanceAtAngle(int angle)
+        {
+            angle = ((angle % 360) + 360) % 360; // Normaliser l'angle entre 0 et 359
+
+            if (angleMeasures.TryGetValue(angle, out var measure))
+                return measure.distance;
+
+            return 0; // Pas de données disponibles
+        }
+
+        private async Task ContinuousMeasurementLoop(int intervalMs)
+        {
+            int errorCount = 0;
+
+            while (!cancellationTokenSource.Token.IsCancellationRequested && isRunning)
             {
                 try
                 {
-                    // Ne pas appeler SetPwm directement, car cela ne semble pas fonctionner
-                    // Laisser le moteur tourner à vitesse normale
-                    if (isRunning)
-                    {
-                        // Conserver le moteur en marche pour les mesures suivantes
-                        // mais sans appeler SetPwm qui semble problématique
-                    }
-                    else
-                    {
-                        // Si le programme est en train de s'arrêter, arrêter le moteur
-                        lidar.StopMotor();
-                    }
+                    Stopwatch sw = Stopwatch.StartNew();
+                    PerformQuickMeasurement(); // Obtenir une nouvelle mesure
+                    errorCount = 0; // Réinitialiser le compteur d'erreurs
+                    sw.Stop();
+
+                    Console.WriteLine($"Temps de mesure: {sw.ElapsedMilliseconds}ms");
+
+                    int delayTime = Math.Max(0, intervalMs - (int)sw.ElapsedMilliseconds);
+                    if (delayTime > 0 && isRunning)
+                        await Task.Delay(delayTime, cancellationTokenSource.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    break; // Normal lors de l'annulation
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erreur lors de l'ajustement du moteur: {ex.Message}");
+                    errorCount++;
+                    Console.WriteLine($"Erreur dans la boucle de mesure: {ex.Message}");
+
+                    if (errorCount > 3 && !isReconnecting && isRunning)
+                    {
+                        isReconnecting = true;
+                        Console.WriteLine("Tentative de réinitialisation du LIDAR après plusieurs échecs...");
+
+                        try
+                        {
+                            lock (lockObject)
+                            {
+                                try { lidar.Stop(); } catch { }
+                                try { lidar.StopMotor(); } catch { }
+                                try { lidar.Disconnect(); } catch { }
+
+                                Thread.Sleep(2000);
+                                InitializeLidar();
+                                errorCount = 0;
+                            }
+                        }
+                        catch (Exception resetEx)
+                        {
+                            Console.WriteLine($"Échec de la réinitialisation du LIDAR: {resetEx.Message}");
+                        }
+                        finally
+                        {
+                            isReconnecting = false;
+                        }
+                    }
+
+                    if (isRunning)
+                        await Task.Delay(1000, cancellationTokenSource.Token);
                 }
             }
         }
-    }
-    
-    private void FillMissingAngles()
-    {
-        // Version simplifiée pour interpoler les angles manquants
-        var angleKeys = angleMeasures.Keys.ToList();
-        if (angleKeys.Count < 2)
-            return;  // Pas assez de données pour l'interpolation
-            
-        angleKeys.Sort();
-        
-        // Pour chaque angle manquant entre 0 et 359
-        for (int angle = 0; angle < 360; angle++)
+
+        private void PerformQuickMeasurement()
         {
-            if (angleMeasures.ContainsKey(angle))
-                continue;  // Angle déjà mesuré
-                
-            // Trouver l'angle inférieur le plus proche
-            int lowerAngle = -1;
-            for (int i = angleKeys.Count - 1; i >= 0; i--)
+            lock (lockObject)
             {
-                if (angleKeys[i] < angle || (angle == 0 && angleKeys[i] > 270))  // Gestion spéciale pour l'angle 0
+                if (!isRunning) return;
+
+                var newValidMeasures = new ConcurrentBag<(bool valid, int quality, double angle, double distance)>();
+
+                try
                 {
-                    lowerAngle = angleKeys[i];
-                    break;
+                    if (lidar == null)
+                    {
+                        InitializeLidar();
+                        Thread.Sleep(500);
+                    }
+
+                    lidar.CleanInput();
+                    lidar.StartMotor();
+                    Thread.Sleep(200); // Laisser le moteur atteindre sa vitesse
+
+                    lidar.Start("normal"); // Mode normal pour plus de fiabilité
+
+                    var measureCount = 0;
+                    var mesure = lidar.IterMeasures("normal");
+
+                    foreach (var mes in mesure)
+                    {
+                        measureCount++;
+                        if (measureCount > maxMeasuresPerScan) break;
+
+                        double angle = mes.Item3;
+
+                        // Normaliser l'angle entre 0 et 360
+                        while (angle < 0) angle += 360;
+                        while (angle >= 360) angle -= 360;
+
+                        // Ignorer les angles de 90° à 270°
+                        if (angle >= 90 && angle <= 270)
+                            continue;
+
+                        if (mes.Item4 > 0) // Ne conserver que les mesures avec distance non nulle
+                        {
+                            var closestIntAngle = (int)Math.Round(angle);
+                            if (closestIntAngle == 360) closestIntAngle = 0;
+
+                            angleMeasures[closestIntAngle] = (mes.Item1, mes.Item2, angle, mes.Item4);
+                            newValidMeasures.Add((mes.Item1, mes.Item2, angle, mes.Item4));
+                        }
+                    }
+
+                    validMeasures = newValidMeasures;
+                    FillMissingAngles(); // Remplir les angles manquants
+                    lidar.Stop();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Erreur lors de la mesure: {e.Message}");
+                    throw;
+                }
+                finally
+                {
+                    if (isRunning)
+                    {
+                        // Laisser le moteur tourner pour les mesures suivantes
+                    }
+                    else
+                    {
+                        lidar.StopMotor();
+                    }
                 }
             }
-            
-            // Trouver l'angle supérieur le plus proche
-            int upperAngle = -1;
-            for (int i = 0; i < angleKeys.Count; i++)
+        }
+
+        private void FillMissingAngles()
+        {
+            var angleKeys = angleMeasures.Keys.ToList();
+            if (angleKeys.Count < 2) return;
+
+            angleKeys.Sort();
+
+            for (int angle = 0; angle < 360; angle++)
             {
-                if (angleKeys[i] > angle || (angle > 270 && angleKeys[i] < 90))  // Gestion spéciale pour les angles près de 360
+                if (angle >= 90 && angle <= 270) continue; // Ignorer les angles non pertinents
+                if (angleMeasures.ContainsKey(angle)) continue;
+
+                // Interpolation des angles manquants
+                int lowerAngle = angleKeys.LastOrDefault(k => k < angle || (angle == 0 && k > 270));
+                int upperAngle = angleKeys.FirstOrDefault(k => k > angle || (angle > 270 && k < 90));
+
+                if (lowerAngle == -1 && angleKeys.Count > 0) lowerAngle = angleKeys.Last();
+                if (upperAngle == -1 && angleKeys.Count > 0) upperAngle = angleKeys.First();
+
+                if (lowerAngle != -1 && upperAngle != -1)
                 {
-                    upperAngle = angleKeys[i];
-                    break;
-                }
-            }
-            
-            // Si nous n'avons pas trouvé d'angle inférieur, utiliser le dernier
-            if (lowerAngle == -1 && angleKeys.Count > 0)
-                lowerAngle = angleKeys[angleKeys.Count - 1];
-                
-            // Si nous n'avons pas trouvé d'angle supérieur, utiliser le premier
-            if (upperAngle == -1 && angleKeys.Count > 0)
-                upperAngle = angleKeys[0];
-                
-            // Si nous avons des angles pour interpoler
-            if (lowerAngle != -1 && upperAngle != -1)
-            {
-                // Obtenir les valeurs à ces angles
-                if (angleMeasures.TryGetValue(lowerAngle, out var lowerValue) && 
-                    angleMeasures.TryGetValue(upperAngle, out var upperValue))
-                {
-                    // Calculer la distance angulaire (en tenant compte du bouclage à 360°)
-                    int angularDistance;
-                    if (upperAngle > lowerAngle)
-                        angularDistance = upperAngle - lowerAngle;
+                    if (angleMeasures.TryGetValue(lowerAngle, out var lowerValue) &&
+                        angleMeasures.TryGetValue(upperAngle, out var upperValue))
+                    {
+                        double ratio = (angle - lowerAngle) / (double)(upperAngle > lowerAngle ? upperAngle - lowerAngle : (upperAngle + 360) - lowerAngle);
+                        double distance = lowerValue.distance + ratio * (upperValue.distance - lowerValue.distance);
+                        int quality = (int)(lowerValue.quality + ratio * (upperValue.quality - lowerValue.quality));
+
+                        angleMeasures[angle] = (true, quality, angle, distance);
+                    }
                     else
-                        angularDistance = (upperAngle + 360) - lowerAngle;
-                        
-                    // Calculer la distance de l'angle actuel par rapport à l'angle inférieur
-                    int distanceFromLower;
-                    if (angle >= lowerAngle)
-                        distanceFromLower = angle - lowerAngle;
-                    else
-                        distanceFromLower = (angle + 360) - lowerAngle;
-                        
-                    // Calculer le ratio pour l'interpolation
-                    double ratio = (double)distanceFromLower / angularDistance;
-                    
-                    // Interpolation linéaire
-                    double distance = lowerValue.distance + ratio * (upperValue.distance - lowerValue.distance);
-                    
-                    // Interpolation de la qualité
-                    int quality = (int)(lowerValue.quality + ratio * (upperValue.quality - lowerValue.quality));
-                    
-                    // Ajouter la mesure interpolée
-                    angleMeasures[angle] = (true, quality, angle, distance);
+                    {
+                        angleMeasures[angle] = (false, 1, angle, 500.0);
+                    }
                 }
                 else
                 {
-                    // Valeur par défaut si on ne peut pas récupérer les valeurs
                     angleMeasures[angle] = (false, 1, angle, 500.0);
                 }
             }
-            else
-            {
-                // Valeur par défaut si on ne peut pas faire l'interpolation
-                angleMeasures[angle] = (false, 1, angle, 500.0);
-            }
         }
-    }
-    
-    private void GenerateImage(string filename)
-    {
-        try
-        {
-            // Créer une copie des données actuelles pour éviter des modifications pendant la génération
-            var currentData = new Dictionary<int, (bool valid, int quality, double exactAngle, double distance)>();
-            foreach (var pair in angleMeasures)
-            {
-                currentData[pair.Key] = pair.Value;
-            }
-            
-            // Générer l'image
-            LidarMapGenerator mapGenerator = new LidarMapGenerator(imageSize: 1000, scale: 0.1f);
-            var map = mapGenerator.GenerateMap(currentData);
 
-            // Sauvegarder l'image
-            mapGenerator.SaveMap(map, filename);
-            Console.WriteLine($"Carte sauvegardée à {filename} avec {mapGenerator.Points} Points");
-        }
-        catch (Exception ex)
+        private void GenerateImage(string filename)
         {
-            Console.WriteLine($"Erreur lors de la génération de l'image: {ex.Message}");
+            try
+            {
+                var currentData = new Dictionary<int, (bool valid, int quality, double exactAngle, double distance)>();
+                foreach (var pair in angleMeasures)
+                {
+                    currentData[pair.Key] = pair.Value;
+                }
+
+                LidarMapGenerator mapGenerator = new LidarMapGenerator(imageSize: 1000, scale: 0.1f);
+                var map = mapGenerator.GenerateMap(currentData);
+                mapGenerator.SaveMap(map, filename);
+                Console.WriteLine($"Carte sauvegardée à {filename} avec {mapGenerator.Points} Points");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur lors de la génération de l'image: {ex.Message}");
+            }
         }
-    }
-    
-    // Implémentation de IDisposable pour nettoyer les ressources
-    public void Dispose()
-    {
-        StopContinuousScan();
+
+        public void Dispose()
+        {
+            StopContinuousScan();
+        }
     }
 }
