@@ -7,7 +7,7 @@ namespace VoitureAutonome;
 
 public class TestSpeed
 {
-    public static void Speed()
+    public void Speed()
     {
         // Configuration du périphérique SPI
         var connectionSettings = new SpiConnectionSettings(0, 0); // Bus SPI 0 et chip select 0
