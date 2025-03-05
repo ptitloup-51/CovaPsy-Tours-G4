@@ -28,7 +28,7 @@ public class Thrust
        
         pwmMotor = PwmChannel.Create(0, 0, 50, _pwmNeutral); // Initialisation avec la position neutre
         pwmMotor.Start();
-        
+        //Thread.Sleep(3000);
        
     }
 
@@ -117,7 +117,7 @@ public class Steering
     private const float _anglePwmMin = 6.0f / 100; // PWM min (gauche)
     private const float _anglePwmMax = 12.0f / 100; // PWM max (droite)
     private const float _anglePwmCenter = 8f / 100; // PWM neutre (tout droit)
-    private const int _angleMax = 70; // Angle maximal en degrés
+    private const int _angleMax = 18; // Angle maximal en degrés
 
     private double DutyCycle;
 
@@ -125,6 +125,7 @@ public class Steering
     {
         pwmSteering = PwmChannel.Create(0, 1, 50, _anglePwmCenter); // Initialisation en position neutre
         pwmSteering.Start();
+        SetDirection(0);
     }
 
     /// <summary>
@@ -139,7 +140,7 @@ public class Steering
         DutyCycle = _anglePwmCenter + (angle / (2.0 * _angleMax)) * (_anglePwmMax - _anglePwmMin);
         pwmSteering.DutyCycle = DutyCycle;
 
-        Console.WriteLine($"Angle réglé à {angle}° -> PWM: {DutyCycle * 100:F2}%");
+      //  Console.WriteLine($"Angle réglé à {angle}° -> PWM: {DutyCycle * 100:F2}%");
     }
 
     public void Center()
