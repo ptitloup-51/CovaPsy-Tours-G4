@@ -19,7 +19,7 @@ public class TestSpeed
         {
             // Buffer de transmission et réception
             //byte[] txBuffer = new byte[6] { 0x55, 0x55, 0, 0, 0, 0 }; // Les données envoyées au STM32
-            byte[] rxBuffer = new byte[7]; // Buffer pour la réponse du STM32
+            byte[] rxBuffer = new byte[9]; // Buffer pour la réponse du STM32
 
             while (true)
             {
