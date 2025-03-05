@@ -1,113 +1,142 @@
-using VoitureAutonome;
+using RpLidar.NET;
+using RpLidar.NET.Entities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using VoitureAutonome;
 
-class Program
+public class Program
 {
     static void Main(string[] args)
     {
+        /*
+        Steering steering = new Steering();
+        steering.Center();
+        Thread.Sleep(4000);
+        steering.SetDirection(18);
+        Thread.Sleep(4000);
+        steering.SetDirection(-18);
+        Thread.Sleep(4000);
+        steering.Center();
+        */
         
         
         
-        
-        
-        
+        string PORT_NAME = "/dev/ttyUSB0";
+
+        Console.WriteLine("Starting RpLidar Test");
+        RPLidar lidar = new RPLidar(PORT_NAME, 256000);
+        lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
+        Console.WriteLine("Lidar connected");
+
         Thrust thrust = new Thrust();
         Steering steering = new Steering();
-       
-
-      //  var lidarMapGenerator = new LidarMapGenerator(imageSize: 1000, scale: 1.0f); // Création du générateur de carte LIDAR
-      
-        var lidarScanner = new RPLidarScanner("/dev/ttyUSB0");
-        lidarScanner.StartScanning();
-        Thread.Sleep(3000);
-        thrust.SetSpeed(2);
-
-        while (true)
-        {
-            try
-            {
-                var scanData = lidarScanner.GetLatestScan();
-                // 2. Filtrer et lisser les données du scan (moyenne des angles voisins)
-                var smoothedData = SmoothScanData(scanData);
-            
-                // 3. Trouver l'angle avec la plus grande distance
-                var maxEntry = smoothedData.Aggregate((l, r) => l.Value > r.Value ? l : r);
-                int maxAngle = maxEntry.Key;
-
-                int error = 90 - maxAngle;
-              //  Console.WriteLine(error); // Affichage de l'erreur, entre le centre (90°) et l'angle le plus long
-                //positif = gauce, négatif = droite
-                
-                steering.SetDirection(MapValue(error, -90, 90, 18, -18));
-              //  Console.WriteLine($" error : {error}, steering : {MapValue(error, -90, 90, -18, 18)}");
-
-               // Thread.Sleep(500);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-               
-            }
-            
-            
-            
-            
-        }
-       
-
-       
         
+        steering.Center();
 
+        Thread.Sleep(3000);
+        thrust.SetSpeed(1); // Démarrer la voiture
 
+        bool isRunning = true;
+        Console.CancelKeyPress += (object? sender, ConsoleCancelEventArgs e) =>
+        {
+            isRunning = false;
+        };
+
+        while (isRunning)
+        {
+
+            // 🔥 Trouver l'angle avec la plus grande distance
+           
+            var bestAngle = GetBestAngle();
+            if (bestAngle.HasValue)
+            {
+                thrust.SetSpeed(1);
+                int maxAngle = bestAngle.Value.angle;
+                float maxDistance = bestAngle.Value.distance;
+                int error = 90 - maxAngle; // Différence entre le centre et l'angle optimal
+                
+              //  Console.WriteLine($"Meilleure direction : {maxAngle}° (Distance : {maxDistance} cm)");
+              //  Console.WriteLine($"Erreur d'angle : {error}");
+
+                // ➡ Ajuster la direction en fonction de l'erreur
+                steering.SetDirection(MapValue(error, -90, 90, 100, -100));
+            }
+            else
+            {
+                thrust.Stop();
+                Console.WriteLine("Aucune donnée valide pour déterminer la direction.");
+            }
+        }
+
+        lidar.Dispose();
+        
     }
-    
+
+    // ⚡ Fonction de mappage (convertir l'erreur en direction moteur)
     static int MapValue(int x, int inMin, int inMax, int outMin, int outMax)
     {
         return outMin + (x - inMin) * (outMax - outMin) / (inMax - inMin);
     }
-    
-    // Fonction pour lisser les données du LIDAR
-    private static Dictionary<int, float> SmoothScanData(Dictionary<int, float> scanData)
+
+    // Dictionnaire pour stocker l'angle, la distance et le timestamp de mise à jour
+    public static Dictionary<int, (float distance, DateTime lastUpdated)> lidarData = new Dictionary<int, (float, DateTime)>();
+
+    public static void Lidar_LidarPointScanEvent(List<LidarPoint> points)
     {
-        var smoothedData = new Dictionary<int, float>();
-
-        foreach (var angle in scanData.Keys)
+        foreach (LidarPoint point in points)
         {
-            // Moyenne des distances des 3 à 4 angles voisins (par exemple, 2 à gauche et 2 à droite)
-            float smoothedDistance = GetAverageOfNeighboringAngles(angle, scanData);
-            smoothedData[angle] = smoothedDistance;
-        }
+            int originalAngle = (int)Math.Round(point.Angle); // Conversion en entier
+            float distance = point.Distance;
 
-        return smoothedData;
+            // Filtrer les angles de 90° à 270°
+            if (originalAngle >= 90 && originalAngle <= 270)
+                continue;
+
+            // Transformer l'angle : 360° → 90°, 90° → 0°, 270° → 180°
+            int adjustedAngle = (originalAngle + 90) % 360;
+
+            // Mettre à jour le dictionnaire avec le timestamp
+            lidarData[adjustedAngle] = (distance, DateTime.Now);
+        }
     }
 
-// Fonction pour calculer la moyenne des distances des 3 à 4 angles voisins autour d'un angle donné
-    private static float GetAverageOfNeighboringAngles(int angle, Dictionary<int, float> scanData)
+    // 🔥 Trouver l'angle avec la plus grande distance
+    public static (int angle, float distance)? GetBestAngle()
     {
-        // Nombre d'angles à prendre en compte pour la moyenne (ici on prend 2 à gauche et 2 à droite)
-        int range = 2;
+        Dictionary<int, float> smoothedData = new Dictionary<int, float>();
 
-        float totalDistance = 0;
-        int count = 0;
-
-        for (int offset = -range; offset <= range; offset++)
+        // Grouper les mesures par tranches de 5°
+        for (int angle = 0; angle < 180; angle += 5)
         {
-            int neighborAngle = (angle + offset + 360) % 360; // S'assurer que l'angle est dans la plage 0-359
-            if (scanData.ContainsKey(neighborAngle))
+            float totalDistance = 0;
+            int count = 0;
+
+            for (int offset = -2; offset <= 2; offset++) // Moyenne sur ±2°
             {
-                totalDistance += scanData[neighborAngle];
-                count++;
+                int checkAngle = angle + offset;
+                if (lidarData.TryGetValue(checkAngle, out var value))
+                {
+                    totalDistance += value.distance;
+                    count++;
+                }
+            }
+
+            if (count > 0)
+            {
+                smoothedData[angle] = totalDistance / count; // Moyenne des distances
             }
         }
 
-        return totalDistance / count; // Retourne la moyenne
+        // Trouver l'angle avec la plus grande distance
+        if (smoothedData.Count > 0)
+        {
+            var maxEntry = smoothedData.Aggregate((l, r) => l.Value > r.Value ? l : r);
+            return (maxEntry.Key, maxEntry.Value);
+        }
+
+        return null;
     }
-
-
-    
-    
 }
