@@ -57,8 +57,8 @@ namespace VoitureAutonome
             string filename = Path.Combine(imageFolder, $"capture_{DateTime.Now:yyyyMMdd_HHmmss}.jpg");
             
             // Utiliser la commande raspistill pour capturer une image
-            string raspistillCommand = $"raspistill -o {filename} -t 1000"; // -t 1000 : temps de capture en ms
-            ExecuteShellCommand(raspistillCommand);
+            string rpicamCommand =  $"rpicam-raw -o  {filename} -t 1000"; // -t 1000 : temps de capture en ms
+            ExecuteShellCommand(rpicamCommand);
 
             if (File.Exists(filename))
             {
