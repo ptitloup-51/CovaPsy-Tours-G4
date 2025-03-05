@@ -17,17 +17,21 @@ public class TestSpeed
         // Ouvrir le périphérique SPI
         using (SpiDevice spiDevice = SpiDevice.Create(connectionSettings))
         {
+            byte[] rxBuffer = new byte[7]; // Buffer de réception (4 octets pour un float)
             while (true)
             {
-                byte[] rxBuffer = new byte[4]; // Buffer de réception (4 octets pour un float)
-
+                
                 spiDevice.Read(rxBuffer); // Lecture des données envoyées par la STM32
+                
+                // Convertir les données reçues en une chaîne de caractères
+                string message = Encoding.ASCII.GetString(rxBuffer);
 
-                float vitesse = BitConverter.ToSingle(rxBuffer, 0); // Conversion des octets en float
+                // Affichage du message reçu
+                Console.WriteLine($"Message reçu : {message}");
 
-                Console.WriteLine($"Vitesse reçue: {vitesse:F2} m/s");
+                // Pause de 1 seconde
+                Thread.Sleep(1000);
 
-                Thread.Sleep(1000); // Pause d'une seconde avant la prochaine lecture
             }
         }
     }    
