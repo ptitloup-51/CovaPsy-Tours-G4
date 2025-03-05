@@ -9112,19 +9112,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\battd\\.nuget\\packages\\": {}
+    "C:\\Users\\timot\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
+      "projectUniqueName": "C:\\Users\\timot\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
       "projectName": "VoitureAutonome",
-      "projectPath": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
-      "packagesPath": "C:\\Users\\battd\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\obj\\",
+      "projectPath": "C:\\Users\\timot\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
+      "packagesPath": "C:\\Users\\timot\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\timot\\RiderProjects\\SAES6\\VoitureAutonome\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\battd\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\timot\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -9146,7 +9146,7 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
+        "auditMode": "direct"
       },
       "SdkAnalysisLevel": "9.0.100"
     },
@@ -9237,19 +9237,19 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
+            "version": "[8.0.2, 8.0.2]"
           },
           {
             "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[8.0.11, 8.0.11]"
+            "version": "[8.0.2, 8.0.2]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
+            "version": "[8.0.2, 8.0.2]"
           },
           {
             "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
+            "version": "[8.0.2, 8.0.2]"
           }
         ],
         "frameworkReferences": {
@@ -9257,20 +9257,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\battd\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-preview.3.24204.13/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'System.Text.RegularExpressions' 4.3.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-cmhx-cq75-c4mj",
-      "libraryId": "System.Text.RegularExpressions",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  }
 }

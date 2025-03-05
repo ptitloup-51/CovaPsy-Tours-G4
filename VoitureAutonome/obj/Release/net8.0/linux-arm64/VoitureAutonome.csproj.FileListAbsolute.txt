@@ -116,3 +116,6 @@
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/System.IO.Pipelines.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/System.Text.Encodings.Web.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/System.Text.Json.dll
+/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/MMALSharp.dll
+/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/MMALSharp.Common.dll
+/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/MMALSharp.Processing.dll

@@ -32,7 +32,7 @@ public class RPLidar
     };
 
     private bool _motorRunning;
-    private readonly int _motorSpeed = 660;
+    private readonly int _motorSpeed = 1023;
     private bool _scanning;
     private readonly SerialPort _serialPort;
 
