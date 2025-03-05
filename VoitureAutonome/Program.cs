@@ -17,7 +17,8 @@ class Program
         th.Dispose();
         */
          
-        
+        TestSpeed ts = new TestSpeed();
+        TestSpeed.Speed();
         
         // Créer une instance de ContinuousLidar
         var lidar = new ContinuousLidar();
