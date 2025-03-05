@@ -11,7 +11,6 @@ class Program
     {
         
         
-        
         /*
         Thrust th = new Thrust();
         Thread.Sleep(5000);
@@ -22,14 +21,22 @@ class Program
         th.Dispose();
         */
          
-        /*
         
+        /*
         TestSpeed testSpeed = new TestSpeed();
         testSpeed.Speed();
         */
-        
 
+        ColorAverage colorAverage = new ColorAverage();
+
+        // Exécuter la capture et le traitement toutes les secondes
+        while (true)
+        {
+            colorAverage.CaptureAndProcess(true); // true pour les pixels rouges
+            Thread.Sleep(1000); // Attendre 1 seconde
+        }
         
+        /*
 
         // Créer une instance de ContinuousLidar
         var lidar = new ContinuousLidar();
@@ -44,10 +51,9 @@ class Program
         {
             // Prendre une photo quand vous le souhaitez
             lidar.TakePhoto($"ma_photo{i}");
-            Thread.Sleep(1000);
         }
 
-    //    Console.WriteLine($"Temps moyen: {lidar.TotalTime / lidar.count}");
+        Console.WriteLine($"Temps moyen: {lidar.TotalTime / lidar.count}");
 
         // Obtenir la distance à un angle spécifique
         Console.WriteLine(lidar.GetDistanceAtAngle(0)); // Distance à 90 degrés
@@ -55,7 +61,7 @@ class Program
         // Arrêter le scan quand vous avez terminé
         lidar.StopContinuousScan();
 
-       
+       */
 
     }
 }
