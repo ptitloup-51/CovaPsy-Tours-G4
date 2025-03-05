@@ -1,76 +1,85 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
-using System.Threading;
 using System.Linq;
+using System.Threading;
 
-namespace VoitureAutonome;
-
-public class RPLidarScanner
+namespace VoitureAutonome
 {
-    private readonly RPLidar _lidar;
-    private readonly ConcurrentDictionary<int, float> _scanData;
-    private Thread _scanThread;
-    private bool _running;
-
-    public RPLidarScanner(string port, int baudrate = 256000)
+    public class RPLidarScanner
     {
-        _lidar = new RPLidar(port, baudrate);
-        _scanData = new ConcurrentDictionary<int, float>();
-    }
+        private readonly RPLidar _lidar;
+        private readonly ConcurrentDictionary<int, (float Distance, long Timestamp)> _scanData;
+        private Thread _scanThread;
+        private bool _running;
+        private Stopwatch _stopwatch;
 
-    public void StartScanning()
-    {
-        if (_running) return;
-        
-        _lidar.Connect();
-        _lidar.StartMotor();
-
-        _scanThread = new Thread(() =>
+        public RPLidarScanner(string port, int baudrate = 256000)
         {
-            try
+            _lidar = new RPLidar(port, baudrate);
+            _scanData = new ConcurrentDictionary<int, (float, long)>();
+            _stopwatch = new Stopwatch();
+        }
+
+        public void StartScanning()
+        {
+            if (_running) return;
+
+            _lidar.Connect();
+            _lidar.StartMotor();
+            _stopwatch.Start();
+
+            _scanThread = new Thread(() =>
             {
-                _lidar.Start("normal");
-                _running = true;
-
-                foreach (var (newScan, _, angle, distance) in _lidar.IterMeasures("normal"))
+                try
                 {
-                    if (!_running) break;
-                    
-                    int roundedAngle = (int)Math.Round(angle) % 360;
-                    _scanData[roundedAngle] = distance;  // Mise à jour continue
+                    _lidar.Start("normal");
+                    _running = true;
 
-                    if (newScan)
+                    foreach (var (newScan, _, angle, distance) in _lidar.IterMeasures("normal"))
                     {
-                        // Nettoyage des anciens points non mis à jour
-                        foreach (var key in _scanData.Keys.Except(Enumerable.Range(0, 360)))
-                            _scanData.TryRemove(key, out _);
+                        if (!_running) break;
+
+                        int transformedAngle = (int)Math.Round((angle + 90) % 360);
+
+                        if (transformedAngle >= 0 && transformedAngle <= 180)
+                        {
+                            long currentTime = _stopwatch.ElapsedMilliseconds;
+                            if (_scanData.TryGetValue(transformedAngle, out var oldData))
+                            {
+                                long timeDiff = currentTime - oldData.Timestamp;
+                                Console.WriteLine($"Angle {transformedAngle}: {timeDiff} ms");
+                            }
+                            _scanData[transformedAngle] = (distance, currentTime);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erreur du LIDAR : {ex.Message}");
+                }
+            })
             {
-                Console.WriteLine($"Erreur du LIDAR : {ex.Message}");
-            }
-        })
+                IsBackground = true
+            };
+
+            _scanThread.Start();
+        }
+
+        public Dictionary<int, float> GetLatestScan()
         {
-            IsBackground = true
-        };
+            return _scanData.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Distance);
+        }
 
-        _scanThread.Start();
-    }
-
-    public Dictionary<int, float> GetLatestScan()
-    {
-        return new Dictionary<int, float>(_scanData); // Copie pour éviter les conflits d'accès
-    }
-
-    public void StopScanning()
-    {
-        _running = false;
-        _lidar.Stop();
-        _lidar.StopMotor();
-        _lidar.Disconnect();
+        public void StopScanning()
+        {
+            _running = false;
+            _lidar.Stop();
+            _lidar.StopMotor();
+            _lidar.Disconnect();
+            _stopwatch.Stop();
+        }
     }
 }

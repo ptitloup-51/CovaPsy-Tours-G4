@@ -20,7 +20,7 @@ public class RPLidar
     private const int HEALTH_TYPE = 6;
 
     private const int MAX_MOTOR_PWM = 1023;
-    private const int DEFAULT_MOTOR_PWM = 660;
+    private const int DEFAULT_MOTOR_PWM = 1023;
     private ExpressPacket _expressData;
     private int _expressTrame = 32;
 
