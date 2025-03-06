@@ -60,8 +60,6 @@
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/VoitureAutonome.runtimeconfig.json
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/VoitureAutonome.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/VoitureAutonome.pdb
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/RPLidarA1.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/Bsa.RpLidar.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/Microsoft.Dynamic.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/Microsoft.Scripting.Metadata.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/Microsoft.Scripting.dll
@@ -79,11 +77,7 @@
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/Mono.Unix.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/Newtonsoft.Json.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/Python.Runtime.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/RPLidar4Net.Api.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/RPLidar4Net.Core.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/RPLidar4Net.IO.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/RJCP.SerialPortStream.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/Serilog.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/SixLabors.Fonts.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/SixLabors.ImageSharp.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/bin/Release/net8.0/linux-arm64/SixLabors.ImageSharp.Drawing.dll

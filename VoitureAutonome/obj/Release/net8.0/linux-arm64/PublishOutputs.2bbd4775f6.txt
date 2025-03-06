@@ -3,8 +3,6 @@
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/VoitureAutonome.deps.json
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/VoitureAutonome.runtimeconfig.json
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/VoitureAutonome.pdb
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/RPLidarA1.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/Bsa.RpLidar.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/Microsoft.Dynamic.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/Microsoft.Scripting.Metadata.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/Microsoft.Scripting.dll
@@ -26,11 +24,7 @@
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/Mono.Unix.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/Newtonsoft.Json.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/Python.Runtime.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/RPLidar4Net.Api.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/RPLidar4Net.Core.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/RPLidar4Net.IO.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/RJCP.SerialPortStream.dll
-/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/Serilog.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/SixLabors.Fonts.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/SixLabors.ImageSharp.dll
 /Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/publish_output/SixLabors.ImageSharp.Drawing.dll

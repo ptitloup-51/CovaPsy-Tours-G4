@@ -8,16 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BarbaSoft.RPLidarA1" Version="1.0.4"/>
-        <PackageReference Include="Bsa.RpLidar" Version="1.0.2"/>
         <PackageReference Include="Emgu.CV" Version="4.10.0.5680" />
         <PackageReference Include="IronPython" Version="3.4.2"/>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1"/>
         <PackageReference Include="MMALSharp" Version="0.6.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="pythonnet" Version="3.1.0-preview2024-09-06"/>
-        <PackageReference Include="RPLidar4Net.Api" Version="0.3.0"/>
-        <PackageReference Include="RPLidar4Net.IO" Version="0.4.0"/>
         <PackageReference Include="SerialPortStream" Version="2.4.2"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
