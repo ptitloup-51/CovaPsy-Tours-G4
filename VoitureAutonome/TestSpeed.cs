@@ -36,4 +36,20 @@ public class TestSpeed
             }
         }
     }
+    // Méthode pour démarrer le thread
+    public void Start()
+    {
+        Thread speedThread = new Thread(new ThreadStart(Speed)); // Crée un thread pour la méthode Speed
+        speedThread.IsBackground = true; // Le thread sera un thread en arrière-plan
+        speedThread.Start(); // Démarre le thread
+    }
+}
+public class Communication
+{
+    public void Com()
+    {
+        // Crée une instance de la classe TestSpeed et démarre le thread
+        TestSpeed testSpeed = new TestSpeed();
+        testSpeed.Start();
+    }
 }
