@@ -31,7 +31,7 @@ public class TestSpeed
                 Console.WriteLine($"Message reçu : {message}");
 
                 // Pause de 1 seconde
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
 
             }
         }
