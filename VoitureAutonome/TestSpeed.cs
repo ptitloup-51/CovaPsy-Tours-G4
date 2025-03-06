@@ -7,6 +7,7 @@ namespace VoitureAutonome;
 
 public class TestSpeed
 {
+    public string ReceivedMessage { get; private set; }
     public void Speed()
     {
         // Configuration du périphérique SPI
@@ -25,10 +26,10 @@ public class TestSpeed
                 spiDevice.TransferFullDuplex(txBuffer, rxBuffer);
                 
                 // Convertir les données reçues en une chaîne de caractères
-                string message = Encoding.ASCII.GetString(rxBuffer);
+                ReceivedMessage = Encoding.ASCII.GetString(rxBuffer);
 
                 // Affichage du message reçu
-                Console.WriteLine($"Message reçu : {message}");
+                Console.WriteLine($"Message reçu : {ReceivedMessage}");
 
                 // Pause de 1 seconde
                 Thread.Sleep(2000);
