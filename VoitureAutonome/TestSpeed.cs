@@ -25,15 +25,17 @@ public class TestSpeed
                 // Réinitialisation du buffer de réception
                 Array.Clear(rxBuffer, 0, rxBuffer.Length);
                 
+                Thread.Sleep(10);
+                
                 spiDevice.TransferFullDuplex(txBuffer, rxBuffer);
 
                 // Convertir les octets reçus en string
                 string message = Encoding.ASCII.GetString(rxBuffer);
                 
                 // Affichage du message reçu
-                Console.WriteLine($"Message reçu : {message}");
+                Console.WriteLine($"Message reçu : {message.Trim()}");
 
-                // Pause de 1 seconde
+                // Pause de 50ms
                 Thread.Sleep(50);
 
             }
