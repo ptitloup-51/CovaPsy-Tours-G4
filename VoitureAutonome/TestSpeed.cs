@@ -7,33 +7,31 @@ namespace VoitureAutonome;
 
 public class TestSpeed
 {
-    public string ReceivedMessage { get; private set; }
     public void Speed()
     {
         // Configuration du périphérique SPI
-        var connectionSettings = new SpiConnectionSettings(0, 0); // Bus SPI 0 et chip select 0
-        connectionSettings.ClockFrequency = 500000; // Fréquence SPI de 500 kHz
+        var connectionSettings = new SpiConnectionSettings(0, 1); // Bus SPI 0 et chip select 0
+        connectionSettings.ClockFrequency = 1000000; // Fréquence SPI de 1 MHz
         connectionSettings.Mode = SpiMode.Mode0; // Mode SPI (le mode dépend de votre configuration STM32)
 
         // Ouvrir le périphérique SPI
         using (SpiDevice spiDevice = SpiDevice.Create(connectionSettings))
         {
             byte[] txBuffer = {0x55, 0x55, 0, 2, 4, 6}; // Buffer d'envoi
-            byte[] rxBuffer = new byte[txBuffer.Length]; // Buffer de réception
+            
             
             while (true)
             {
+                txBuffer[3]++;
                 
+                byte[] rxBuffer = new byte[txBuffer.Length]; // Buffer de réception
                 spiDevice.TransferFullDuplex(txBuffer, rxBuffer);
-                
-                // Convertir les données reçues en une chaîne de caractères
-                ReceivedMessage = Encoding.ASCII.GetString(rxBuffer);
 
                 // Affichage du message reçu
-                Console.WriteLine($"Message reçu : {ReceivedMessage}");
+                Console.WriteLine($"Message reçu : {BitConverter.ToString(rxBuffer)}");
 
                 // Pause de 1 seconde
-                Thread.Sleep(2000);
+                Thread.Sleep(100);
 
             }
         }
