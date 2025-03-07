@@ -11,11 +11,20 @@ namespace VoitureAutonome;
 /// </summary>
 public class RemoteDebug
 {
-    static RemoteDebug()
+
+    public bool IsRunning;
+    public RemoteDebug()
     {
+        IsRunning = true;
         Task.Run(() => RunServer());
     }
 
+    public void Dispose()
+    {
+        IsRunning = false;
+    }
+
+    
     private static string GetLocalIPAddress()
     {
         foreach (var netInterface in NetworkInterface.GetAllNetworkInterfaces())
@@ -33,7 +42,7 @@ public class RemoteDebug
     /// </summary>
     /// <param name="address"></param>
     /// <param name="port"></param>
-    public static void RunServer(string address = "127.0.0.1", int port = 5555)
+    public void RunServer(string address = "127.0.0.1", int port = 4444)
     {
         address = GetLocalIPAddress();
         Console.WriteLine($"Starting server on {address}:{port}");
@@ -42,7 +51,7 @@ public class RemoteDebug
         listener.Start();
         Console.WriteLine($"Serveur démarré sur http://{address}:{port}/");
 
-        while (true)
+        while (true) // IsRunning
         {
             var context = listener.GetContext();
             var request = context.Request;
@@ -50,42 +59,100 @@ public class RemoteDebug
 
             if (request.HttpMethod == "GET")
             {
-                var responseString = "null";
-                switch (request.Url.AbsolutePath)
-                {
-                    case "/temperature":
-                        responseString = "28°C";
-                        break;
-                    case "/roulie":
-                        responseString = "30°";
-                        break;
-                    case "/Heure":
-                        responseString = DateTime.Now.ToLongTimeString();
-                        break;
-                    default:
-                        responseString = "pas de valeur";
-                        break;
-                }
-
-                var buffer = Encoding.UTF8.GetBytes(responseString);
-                response.ContentLength64 = buffer.Length;
-                response.OutputStream.Write(buffer, 0, buffer.Length);
+                HandleGetRequest(context);
             }
             else if (request.HttpMethod == "POST" && request.Url.AbsolutePath == "/post-value")
             {
-                using var reader = new StreamReader(request.InputStream, request.ContentEncoding);
-                var requestBody = reader.ReadToEnd();
-                var data = JsonSerializer.Deserialize<Dictionary<string, string>>(requestBody);
-
-                Console.WriteLine(data["message"]);
-
-                var responseString = $"Received: {data["message"]}";
-                var buffer = Encoding.UTF8.GetBytes(responseString);
-                response.ContentLength64 = buffer.Length;
-                response.OutputStream.Write(buffer, 0, buffer.Length);
+                HandlePostRequest(context);
             }
 
             response.OutputStream.Close();
         }
+        Console.WriteLine("Serveur arreté");
     }
+    
+    // Définition du délégué
+    public delegate void Callaback(string command, string content);
+
+    // Définition de l'événement basé sur ce délégué
+    public event Callaback? CommandCallback;
+
+    private void HandleGetRequest(HttpListenerContext context)
+    {
+       
+        if (context.Request.Url.AbsolutePath.StartsWith("/send"))
+        {
+            Console.WriteLine($"Command request from {context.Request.RemoteEndPoint}");
+            Console.WriteLine($"Traitement de la commande");
+            string[] content = context.Request.Url.AbsolutePath.Split(';');
+            CommandCallback?.Invoke(content[1], content[2]);
+            Console.WriteLine($"Commande : {content[1]}, content : {content[2]}");
+        }
+        else
+        {
+            var responseString = "null";
+            switch (context.Request.Url.AbsolutePath)
+            {
+                case "/temperature":
+                    responseString = "28°C";
+                    break;
+                case "/roulie":
+                    responseString = "30°";
+                    break;
+                case "/Heure":
+                    responseString = DateTime.Now.ToLongTimeString();
+                    break;
+                case "/Status":
+                    responseString = IsRunning? "yes" : "no";
+                    break;
+                default:
+                    responseString = "pas de valeur";
+                    break;
+            }
+
+            var buffer = Encoding.UTF8.GetBytes(responseString);
+            context.Response.ContentLength64 = buffer.Length;
+            context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+        }
+        
+        
+    }
+    
+    
+    private static void HandlePostRequest(HttpListenerContext context)
+    {
+        using var reader = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding);
+        var requestBody = reader.ReadToEnd();
+
+        try
+        {
+            var data = JsonSerializer.Deserialize<Dictionary<string, string>>(requestBody);
+            if (data == null || !data.ContainsKey("commande"))
+            {
+                SendResponse(context.Response, "Format JSON invalide", HttpStatusCode.BadRequest);
+                return;
+            }
+
+            string command = data["commande"];
+            Console.WriteLine(command);
+
+            Console.WriteLine($"Commande reçue: {command}");
+            SendResponse(context.Response, $"Résultat: {"ok"}", HttpStatusCode.OK);
+        }
+        catch (JsonException)
+        {
+            SendResponse(context.Response, "Erreur de décodage JSON", HttpStatusCode.BadRequest);
+        }
+    }
+    
+    private static void SendResponse(HttpListenerResponse response, string message, HttpStatusCode statusCode)
+    {
+        byte[] buffer = Encoding.UTF8.GetBytes(message);
+        response.StatusCode = (int)statusCode;
+        response.ContentLength64 = buffer.Length;
+        response.OutputStream.Write(buffer, 0, buffer.Length);
+        response.OutputStream.Close();
+    }
+    
+    
 }

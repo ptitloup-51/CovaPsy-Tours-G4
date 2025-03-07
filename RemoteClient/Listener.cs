@@ -1,10 +1,9 @@
-using System.Diagnostics;
-
 namespace RemoteClient;
+
+
 
 public class Listener
 {
-
     public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
 
     private static readonly HttpClient client = new HttpClient();
@@ -14,8 +13,9 @@ public class Listener
     
     string Baseurl; 
     
-    public Listener(string _adress, int _port)
+    public Listener(string _adress, int _port, int UpdateMs)
     {
+        
         adress = _adress;
         port = _port;
         
@@ -23,25 +23,46 @@ public class Listener
         
         Values.TryAdd("Heure", "..-..-..");
         Values.TryAdd("Temperature", "0°C");
+        Values.TryAdd("Status", "not running");
 
         GetValues();
     }
+    
+    public async void Send(string command, string content = "null")
+    {
+        //Console.WriteLine($"iuheiuzefzef");
+        //Console.WriteLine($"appel de la page: http://{adress}:{port}/send;{command};{content}");
+        await new HttpClient().GetAsync($"http://{adress}:{port}/send;{command};{content}");
+    }
+    
+    
+    
+    // Définition du délégué
+    public delegate void Callback(string command, string value);
 
+    // Définition de l'événement basé sur ce délégué
+    public event Callback? NewValues;
+    
     private async void GetValues()
     {
-        foreach (var val in Values)
+        while (true)
         {
-            HttpResponseMessage response = await client.GetAsync(Baseurl + val.Key);
-            if (response.IsSuccessStatusCode)
+            foreach (var val in Values)
             {
-                string value = await response.Content.ReadAsStringAsync();
-                Values[val.Key] = value;
-                Console.WriteLine($"{val.Key} vaut {value}");
+                HttpResponseMessage response = await client.GetAsync(Baseurl + val.Key);
+                if (response.IsSuccessStatusCode)
+                {
+                    string value = await response.Content.ReadAsStringAsync();
+                    Values[val.Key] = value;
+                   // Console.WriteLine($"{val.Key} vaut {value}");
+                    NewValues?.Invoke(val.Key, value);
+                }
+                else
+                {
+                    Console.WriteLine($"Erreur: {response.StatusCode}");
+                }
             }
-            else
-            {
-                Console.WriteLine($"Erreur: {response.StatusCode}");
-            }
+            Thread.Sleep(1000);
         }
     }
 }
