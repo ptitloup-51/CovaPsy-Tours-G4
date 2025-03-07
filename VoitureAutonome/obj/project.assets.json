@@ -8952,24 +8952,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\battd\\.nuget\\packages\\": {}
+    "/Users/loup/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
+      "projectUniqueName": "/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/VoitureAutonome.csproj",
       "projectName": "VoitureAutonome",
-      "projectPath": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\VoitureAutonome.csproj",
-      "packagesPath": "C:\\Users\\battd\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\battd\\RiderProjects\\SAES6\\VoitureAutonome\\obj\\",
+      "projectPath": "/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/VoitureAutonome.csproj",
+      "packagesPath": "/Users/loup/.nuget/packages/",
+      "outputPath": "/Users/loup/RiderProjects/SAES6Copy/VoitureAutonome/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\battd\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/loup/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "/Users/loup/NuGet/": {},
+        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -8986,9 +8988,8 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
-      },
-      "SdkAnalysisLevel": "9.0.100"
+        "auditMode": "direct"
+      }
     },
     "frameworks": {
       "net8.0": {
@@ -9058,30 +9059,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[8.0.11, 8.0.11]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\battd\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.303/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
@@ -9090,8 +9073,8 @@
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'System.Text.RegularExpressions' 4.3.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-cmhx-cq75-c4mj",
-      "libraryId": "System.Text.RegularExpressions",
+      "message": "Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8",
+      "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net8.0"
       ]

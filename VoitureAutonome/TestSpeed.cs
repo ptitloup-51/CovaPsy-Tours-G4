@@ -36,7 +36,7 @@ public class TestSpeed
                 Console.WriteLine($"Message reçu : {message.Trim()}");
 
                 // Pause de 50ms
-                Thread.Sleep(50);
+                Thread.Sleep(500);
 
             }
         }
