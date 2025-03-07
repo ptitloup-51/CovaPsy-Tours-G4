@@ -18,8 +18,9 @@ public class TestSpeed
         // Ouvrir le périphérique SPI
         using (SpiDevice spiDevice = SpiDevice.Create(connectionSettings))
         {
-            byte[] txBuffer = new byte[7]; // Buffer d'envoi vide
-            byte[] rxBuffer = new byte[7]; // Buffer de réception
+            byte[] txBuffer = {0x55, 0x55, 0, 2, 4, 6}; // Buffer d'envoi
+            byte[] rxBuffer = new byte[txBuffer.Length]; // Buffer de réception
+            
             while (true)
             {
                 
