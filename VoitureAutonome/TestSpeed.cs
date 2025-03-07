@@ -17,21 +17,21 @@ public class TestSpeed
         // Ouvrir le périphérique SPI
         using (SpiDevice spiDevice = SpiDevice.Create(connectionSettings))
         {
-            byte[] txBuffer = {0x55, 0x55, 0, 2, 4, 6}; // Buffer d'envoi
-            
+            byte[] txBuffer = {0x55, 0x55, 0, 2, 4, 6, 8}; // Buffer d'envoi
+            byte[] rxBuffer = new byte[txBuffer.Length]; // Buffer de réception
             
             while (true)
             {
-                txBuffer[3]++;
-                
-                byte[] rxBuffer = new byte[txBuffer.Length]; // Buffer de réception
                 spiDevice.TransferFullDuplex(txBuffer, rxBuffer);
 
+                // Convertir les octets reçus en string
+                string message = Encoding.ASCII.GetString(rxBuffer);
+                
                 // Affichage du message reçu
-                Console.WriteLine($"Message reçu : {BitConverter.ToString(rxBuffer)}");
+                Console.WriteLine($"Message reçu : {message}");
 
                 // Pause de 1 seconde
-                Thread.Sleep(100);
+                Thread.Sleep(500);
 
             }
         }
