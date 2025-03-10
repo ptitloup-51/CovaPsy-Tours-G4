@@ -15,7 +15,6 @@ public class AutoDrive
     private Steering steering;
     
     
-    
     public AutoDrive()
     {
         isRunning = false;
@@ -29,7 +28,6 @@ public class AutoDrive
     public void Stop()
     {
         isRunning = false;
-        
     }
 
     public void Run()
@@ -107,7 +105,7 @@ public class AutoDrive
         var maxAngle = -1;
         float maxDistance = 0;
 
-        foreach (var angle in angles)
+            foreach (var angle in angles)
             if (angle.Value > maxDistance)
             {
                 maxAngle = angle.Key;
@@ -125,27 +123,6 @@ public class AutoDrive
         //  Console.WriteLine("retourning last angle");
         return lastPoint;
     }
-
-    // 🔥 Cherche la distance la plus récente autour d'un angle donné (ex: 75° ± 3°)
-    private static (float distance, TimeSpan timeSinceUpdate)? GetRecentDistance(int targetAngle, int tolerance)
-    {
-        var latestTime = DateTime.MinValue;
-        float? bestDistance = null;
-        TimeSpan? bestTimeSinceUpdate = null;
-
-        for (var angle = targetAngle - tolerance; angle <= targetAngle + tolerance; angle++)
-            if (lidarData.TryGetValue(angle, out var value))
-            {
-                var timeSinceUpdate = DateTime.Now - value.lastUpdated;
-                if (value.lastUpdated > latestTime) // On prend la plus récente
-                {
-                    latestTime = value.lastUpdated;
-                    bestDistance = value.distance;
-                    bestTimeSinceUpdate = timeSinceUpdate;
-                }
-            }
-
-        return bestDistance.HasValue ? (bestDistance.Value, bestTimeSinceUpdate.Value) : null;
-    }
+    
 
 }

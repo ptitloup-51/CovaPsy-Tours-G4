@@ -53,4 +53,12 @@ public partial class MainPage : ContentPage
     {
         Listener.Send("kill");
     }
+
+    private bool canSend = false;
+   
+
+    private void SendRadius_OnClicked(object? sender, EventArgs e)
+    {
+        Listener.Send("radius", RaduisEntry.Text);
+    }
 }

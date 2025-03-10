@@ -12,7 +12,7 @@
       <CodesignDisableTimestamp>true</CodesignDisableTimestamp>
       <CodesignKeychain></CodesignKeychain>
       <CodesignUseHardenedRuntime></CodesignUseHardenedRuntime>
-      <SourceProjectPath>/Users/loup/Documents/GitHub/SAES6/RemoteClient</SourceProjectPath>
+      <SourceProjectPath>/Users/loup/RiderProjects/SAES6Copy/RemoteClient</SourceProjectPath>
     </_CodesignBundle>
   </ItemGroup>
 </Project>

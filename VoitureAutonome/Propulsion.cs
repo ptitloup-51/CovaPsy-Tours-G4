@@ -114,9 +114,9 @@ public class Steering
     private static PwmChannel pwmSteering;
 
     // Paramètres de la direction
-    private const float _anglePwmMin = 6.0f / 100; // PWM min (gauche)
-    private const float _anglePwmMax = 12.0f / 100; // PWM max (droite)
-    private const float _anglePwmCenter = 9f / 100; // PWM neutre (tout droit)
+    private const float _anglePwmMin = 4f / 100; // PWM min (gauche)
+    private const float _anglePwmMax =  9.4f / 100; // PWM max (droite)
+    private const float _anglePwmCenter = 6.7f / 100; // PWM neutre (tout droit)
     private const int _angleMax = 100; // Angle maximal en degrés
 
     private double DutyCycle;

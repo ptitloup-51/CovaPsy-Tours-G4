@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using RpLidar.NET;
 using RpLidar.NET.Entities;
 using VoitureAutonome;
@@ -5,13 +6,17 @@ using VoitureAutonome;
 public class Program
 {
 
-    private static AutoDrive auto;
+    private static AutoDriveV3 auto;
+    static Steering steering = new();
     private static void Main(string[] args)
     {
-
-        RemoteDebug debug = new();
-        auto = new AutoDrive();
+        Misc misc = new();
+        misc.Test();
         
+        RemoteDebug debug = new();
+        
+        auto = new AutoDriveV3();
+      
         debug.CommandCallback += HandleCommande;
         
         Thread.Sleep(Timeout.Infinite);
@@ -34,6 +39,13 @@ public class Program
             case "stop": //arrete la voiture
                 Console.WriteLine("Fin de la conduite !!");
                 auto.Stop();
+                break;
+            case "steer":
+                steering.SetDirection(Convert.ToInt32(content));
+                break;
+            case "radius":
+                Console.WriteLine("nouveau radius : " + content);
+                auto.Radius = Convert.ToInt32(content);
                 break;
             default:
                 Console.WriteLine("commande inconnue " + command);

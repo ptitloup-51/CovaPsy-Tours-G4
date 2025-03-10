@@ -71,6 +71,9 @@
                 <Label x:Name="SteeringLabel" Text="Angle direction: --°" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
             </Frame>
         </Grid>
+        
+        <Entry Placeholder="Radius value" x:Name="RaduisEntry"></Entry>
+        <Button Text="Send" x:Name="SendRadius" Clicked="SendRadius_OnClicked"></Button>
 
     </VerticalStackLayout>
 

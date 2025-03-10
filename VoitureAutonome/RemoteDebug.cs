@@ -105,6 +105,9 @@ public class RemoteDebug
                 case "/Status":
                     responseString = IsRunning? "yes" : "no";
                     break;
+                case "/angle":
+                    responseString = "null";
+                    break;
                 default:
                     responseString = "pas de valeur";
                     break;
