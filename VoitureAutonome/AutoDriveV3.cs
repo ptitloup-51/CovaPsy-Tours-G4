@@ -30,7 +30,7 @@ public class AutoDriveV3
     Steering Steering = new Steering();
     Thrust Thrust = new Thrust();
 
-    public float Radius = 1500.0f;
+    public float Radius = 1700.0f;
 
     public AutoDriveV3()
     {
@@ -48,10 +48,9 @@ public class AutoDriveV3
         
         var lidar = new RPLidar("/dev/ttyUSB0", 256000);
         Steering.SetDirection(0);
-        Thread.Sleep(4000);
-        Steering.SetDirection(100);
+        Thread.Sleep(5000);
         lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-        Thrust.SetSpeed(5);
+        Thrust.SetSpeed(2);
         
         
         
@@ -59,7 +58,6 @@ public class AutoDriveV3
         {
         //    Console.WriteLine("Follow the gap angle : " + FollowTheGap());
         Steering.SetDirection(Misc.MapValue((int)FollowTheGap(), 0, 180, -100, 100));
-        // Console.WriteLine(bestangle); 
         }
         
         Thrust.Dispose();
@@ -99,22 +97,27 @@ public class AutoDriveV3
             }
         }
         
-        /*
         
+        
+        
+        
+        
+
+        if (bestGap.GetGapLengh() == 0) // Si on a pas de mesure de gap on continue tout droit jusqu'a trouver un obstacle
+        {
+            Console.WriteLine("pas de GAP !");
+            bestGap.start = 80;
+            bestGap.end = 100;
+        }
+        
+        /*
         Console.WriteLine("------------");
         Console.WriteLine("start gap : " + bestGap.start);
         Console.WriteLine("mid gap : " + bestGap.GetMid());
         Console.WriteLine("end gap : " + bestGap.end);
         Console.WriteLine("Gap lenght : " + bestGap.GetGapLengh());
         Console.WriteLine("------------");
-        
         */
-
-        if (bestGap.GetGapLengh() == 0) // Si on a pas de mesure de gap on prend à droite pour retoruver un obstacle
-        {
-            bestGap.start = 0;
-            bestGap.end = 20;
-        }
         
         
         
@@ -136,9 +139,12 @@ public class AutoDriveV3
         // Mettre à jour uniquement les angles reçus
         foreach (var point in points)
         {
-            int angleIndex = (int)Math.Round(point.Angle) % 360;
-           
-            lidarMemory360[angleIndex] = point.Distance;
+            if (point.Quality > 10) // Si le point est de qualité suffisante
+            {
+                int angleIndex = (int)Math.Round(point.Angle) % 360;
+                lidarMemory360[angleIndex] = point.Distance; // on l'ajoute
+            }
+            
             
         }
 

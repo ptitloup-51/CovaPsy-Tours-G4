@@ -8,12 +8,19 @@ public class Program
 
     private static AutoDriveV3 auto;
     static Steering steering = new();
+    
+    static SteeringTest test = new();
+    
     private static void Main(string[] args)
     {
         Misc misc = new();
         misc.Test();
         
+       // test.Test();
+        
         RemoteDebug debug = new();
+        
+        
         
         auto = new AutoDriveV3();
       
