@@ -30,7 +30,7 @@ namespace VoitureAutonome
             Steering.SetDirection(0);
             Thread.Sleep(5000); // Attendre que le LIDAR soit prêt
             lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-            Thrust.SetSpeed(15);
+         //   Thrust.SetSpeed(15);
 
             while (isRunning)
             {
@@ -142,6 +142,8 @@ namespace VoitureAutonome
 
             // Appliquer le filtre de Kalman pour lisser les données
             LidarPoints = Misc.KalmanFilter(rawData180);
+
+            Console.WriteLine($"Scan in {DateTime.Now.Millisecond - LastTime.Millisecond} ms");
 
             LastTime = DateTime.Now;
         }

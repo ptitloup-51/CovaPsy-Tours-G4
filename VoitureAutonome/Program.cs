@@ -20,8 +20,6 @@ public class Program
         
         RemoteDebug debug = new();
         
-        
-        
         auto = new AutoDriveV4();
       
         debug.CommandCallback += HandleCommande;
@@ -58,10 +56,30 @@ public class Program
                 Communication communication = new Communication();
                 communication.Com();
                 break;
+            case "scan":
+                ScanTest(Convert.ToInt32(content));
+                break;
             default:
                 Console.WriteLine("commande inconnue " + command);
                 break;
         }
     }
 
+    static void ScanTest(int time)
+    {
+        var lidar = new RPLidar("/dev/ttyUSB0", 256000);
+        lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
+        Thread.Sleep(time * 1000); // Attendre que le LIDAR soit prêt
+        lidar.Dispose();
+    }
+
+    private static void Lidar_LidarPointScanEvent(List<LidarPoint> points)
+    {
+       
+        foreach (var point in points)
+        {
+           Console.WriteLine(point.ToString());
+        }
+        
+    }
 }

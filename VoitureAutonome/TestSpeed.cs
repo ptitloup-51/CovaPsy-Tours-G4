@@ -38,7 +38,7 @@ public class TestSpeed
                 Console.WriteLine("Reçu (Texte): " + Encoding.ASCII.GetString(rxBuffer));
 
                 // Pause de 500ms
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
 
             }
         }
