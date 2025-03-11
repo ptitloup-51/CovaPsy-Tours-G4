@@ -8,9 +8,9 @@
       <dSYMSourcePathExists>false</dSYMSourcePathExists>
       <NoSymbolStrip>true</NoSymbolStrip>
       <dSYMInfoPlistRelativePath>RemoteClient.app.dSYM\Contents\Info.plist</dSYMInfoPlistRelativePath>
-      <SymbolFile>/Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/mtouch-symbols.list</SymbolFile>
+      <SymbolFile>/Users/loup/RiderProjects/SAES6Copy/RemoteClient/obj/Debug/net8.0-maccatalyst/maccatalyst-arm64/mtouch-symbols.list</SymbolFile>
       <DSymName>RemoteClient.app.dSYM</DSymName>
-      <SourceProjectPath>/Users/loup/Documents/GitHub/SAES6/RemoteClient</SourceProjectPath>
+      <SourceProjectPath>/Users/loup/RiderProjects/SAES6Copy/RemoteClient</SourceProjectPath>
       <IsXPCService></IsXPCService>
     </_PostProcessingItem>
   </ItemGroup>

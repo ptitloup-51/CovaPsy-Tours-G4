@@ -1,134 +1,63 @@
+using System.Net.Http.Headers;
 using RpLidar.NET;
 using RpLidar.NET.Entities;
 using VoitureAutonome;
 
 public class Program
 {
-    // Dictionnaire pour stocker l'angle, la distance et le timestamp de mise à jour
-    public static Dictionary<int, (float distance, DateTime lastUpdated)> lidarData = new();
 
-
-    private static int lastPoint;
-
-
+    private static AutoDriveV3 auto;
+    static Steering steering = new();
+    
+    static SteeringTest test = new();
+    
     private static void Main(string[] args)
     {
-        /*
-        TestSpeed speed = new TestSpeed();
-        speed.Speed();
-        */
-
-
-        var PORT_NAME = "/dev/ttyUSB0";
-
-        Console.WriteLine("Starting RpLidar Test");
-        var lidar = new RPLidar(PORT_NAME, 256000);
-        lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-        Console.WriteLine("Lidar connected");
-
-        var thrust = new Thrust();
-        var steering = new Steering();
-        steering.SetDirection(0);
-
-        Thread.Sleep(3000);
-        thrust.SetSpeed(1);
-
-
-        var isRunning = true;
-        Console.CancelKeyPress += (sender, e) => { isRunning = false; };
-
-        while (isRunning) steering.SetDirection(MapValue(GetAngle(350), 0, 180, -90, 90));
-
-        lidar.Dispose();
+        Misc misc = new();
+        misc.Test();
+        
+       // test.Test();
+        
+        RemoteDebug debug = new();
+        
+        
+        
+        auto = new AutoDriveV3();
+      
+        debug.CommandCallback += HandleCommande;
+        
+        Thread.Sleep(Timeout.Infinite);
+        
     }
 
-    private static int MapValue(int x, int inMin, int inMax, int outMin, int outMax)
-    {
-        return outMin + (x - inMin) * (outMax - outMin) / (inMax - inMin);
-    }
 
-    public static void Lidar_LidarPointScanEvent(List<LidarPoint> points)
+    private static void HandleCommande(string command, string content)
     {
-        foreach (var point in points)
+        switch (command)
         {
-            var originalAngle = (int)Math.Round(point.Angle); // Conversion en entier
-            var distance = point.Distance;
-
-            // Filtrer les angles de 90° à 270°
-            if (originalAngle >= 90 && originalAngle <= 270)
-                continue;
-
-            // Transformer l'angle : 360° → 90°, 90° → 0°, 270° → 180°
-            var adjustedAngle = (originalAngle + 90) % 360;
-
-            // Mettre à jour le dictionnaire avec le timestamp
-            lidarData[adjustedAngle] = (distance, DateTime.Now);
+            case "kill": //tue le processus
+                Console.WriteLine("fin du programme !");
+                System.Environment.Exit(0);
+                break;
+            case "start": //démarre la conduite
+                Console.WriteLine("début de la conduite !!");
+                new Thread(() => auto.Run()).Start();
+                break;
+            case "stop": //arrete la voiture
+                Console.WriteLine("Fin de la conduite !!");
+                auto.Stop();
+                break;
+            case "steer":
+                steering.SetDirection(Convert.ToInt32(content));
+                break;
+            case "radius":
+                Console.WriteLine("nouveau radius : " + content);
+                auto.Radius = Convert.ToInt32(content);
+                break;
+            default:
+                Console.WriteLine("commande inconnue " + command);
+                break;
         }
     }
 
-
-    public static int GetAngle(int ms, int zone = 10)
-    {
-        var angles = new Dictionary<int, float>();
-
-
-        for (var i = 0; i < 180; i += zone) // de 0 à 180
-        {
-            var count = 0;
-            float distance = 0;
-
-            for (var j = 0; j < zone; j++) // par pas de 10
-                if (lidarData.ContainsKey(i + j))
-                    if (DateTime.Now - lidarData[i + j].lastUpdated < TimeSpan.FromMilliseconds(ms))
-                    {
-                        distance += lidarData[i + j].distance;
-                        count++;
-                    }
-
-            angles.Add(i, distance / count); // on fait la moyenne
-        }
-
-        var maxAngle = -1;
-        float maxDistance = 0;
-
-        foreach (var angle in angles)
-            if (angle.Value > maxDistance)
-            {
-                maxAngle = angle.Key;
-
-                maxDistance = angle.Value;
-            }
-
-
-        if (maxAngle != -1)
-        {
-            lastPoint = maxAngle;
-            return maxAngle;
-        }
-
-        //  Console.WriteLine("retourning last angle");
-        return lastPoint;
-    }
-
-    // 🔥 Cherche la distance la plus récente autour d'un angle donné (ex: 75° ± 3°)
-    public static (float distance, TimeSpan timeSinceUpdate)? GetRecentDistance(int targetAngle, int tolerance)
-    {
-        var latestTime = DateTime.MinValue;
-        float? bestDistance = null;
-        TimeSpan? bestTimeSinceUpdate = null;
-
-        for (var angle = targetAngle - tolerance; angle <= targetAngle + tolerance; angle++)
-            if (lidarData.TryGetValue(angle, out var value))
-            {
-                var timeSinceUpdate = DateTime.Now - value.lastUpdated;
-                if (value.lastUpdated > latestTime) // On prend la plus récente
-                {
-                    latestTime = value.lastUpdated;
-                    bestDistance = value.distance;
-                    bestTimeSinceUpdate = timeSinceUpdate;
-                }
-            }
-
-        return bestDistance.HasValue ? (bestDistance.Value, bestTimeSinceUpdate.Value) : null;
-    }
 }

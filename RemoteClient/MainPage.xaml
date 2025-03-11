@@ -19,25 +19,28 @@
                             <Entry Placeholder="192.168.2.127" x:Name="Address" WidthRequest="150"/>
                         </HorizontalStackLayout>
                     
-                        <HorizontalStackLayout Padding="10,0,0,0">
+                        <HorizontalStackLayout Padding="10,0,10,0">
                             <Label Text="Port:" FontFamily="QuicksandBold" VerticalTextAlignment="Center"/>
                             <Entry Placeholder="5555" x:Name="Port" WidthRequest="100"/>
                         </HorizontalStackLayout>
+                        
+                        <Button Text="Connexion" WidthRequest="100" Padding="10,0,0,0" Clicked="Connect_OnClicked" x:Name="ConnexionBTN"></Button>
+                        
                     </HorizontalStackLayout>
-                    
-                  
-                    
-                    
+                
+                
                 
             </VerticalStackLayout>
         </Frame>
 
         <!-- Boutons -->
-        <HorizontalStackLayout Spacing="20" HorizontalOptions="FillAndExpand">
-            <Button Text="🚗 Démarrer" x:Name="Start" Clicked="Start_OnClicked"  
+        <HorizontalStackLayout Spacing="20" HorizontalOptions="FillAndExpand" x:Name="CommandBox" IsEnabled="False">
+            <Button Text="🚗 Démarrer" x:Name="StartButton" Clicked="Start_OnClicked" 
                     BackgroundColor="#4CAF50" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
-            <Button Text="🛑 Arrêter"  
+            <Button Text="🛑 Arrêter" x:Name="StopButton" Clicked="StopButton_OnClicked" 
                     BackgroundColor="#F44336" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
+            <Button Text="💀 Tuer le programme"  x:Name="KillButton" Clicked="KillButton_OnClicked"
+                    BackgroundColor="#000000" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
         </HorizontalStackLayout>
 
         <!-- Télémétrie -->
@@ -68,6 +71,9 @@
                 <Label x:Name="SteeringLabel" Text="Angle direction: --°" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
             </Frame>
         </Grid>
+        
+        <Entry Placeholder="Radius value" x:Name="RaduisEntry"></Entry>
+        <Button Text="Send" x:Name="SendRadius" Clicked="SendRadius_OnClicked"></Button>
 
     </VerticalStackLayout>
 

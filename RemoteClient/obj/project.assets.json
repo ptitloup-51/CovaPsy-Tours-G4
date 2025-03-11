@@ -24748,11 +24748,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/loup/Documents/GitHub/SAES6/RemoteClient/RemoteClient.csproj",
+      "projectUniqueName": "/Users/loup/RiderProjects/SAES6Copy/RemoteClient/RemoteClient.csproj",
       "projectName": "RemoteClient",
-      "projectPath": "/Users/loup/Documents/GitHub/SAES6/RemoteClient/RemoteClient.csproj",
+      "projectPath": "/Users/loup/RiderProjects/SAES6Copy/RemoteClient/RemoteClient.csproj",
       "packagesPath": "/Users/loup/.nuget/packages/",
-      "outputPath": "/Users/loup/Documents/GitHub/SAES6/RemoteClient/obj/",
+      "outputPath": "/Users/loup/RiderProjects/SAES6Copy/RemoteClient/obj/",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "configFilePaths": [
@@ -24764,6 +24764,7 @@
         "net8.0-maccatalyst"
       ],
       "sources": {
+        "/Users/loup/NuGet/": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

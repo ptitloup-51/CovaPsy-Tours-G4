@@ -34,11 +34,9 @@ public class TestSpeed
                 
                 // Affichage du message reçu
                 Console.WriteLine($"Message reçu : {message.Trim()}");
-                Console.WriteLine("Reçu (HEX): " + BitConverter.ToString(rxBuffer));
-                Console.WriteLine("Reçu (Texte): " + Encoding.ASCII.GetString(rxBuffer));
 
                 // Pause de 50ms
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
 
             }
         }

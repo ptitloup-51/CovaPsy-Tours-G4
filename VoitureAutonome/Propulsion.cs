@@ -23,13 +23,14 @@ public class Thrust
 
     private double DutyCycle;
 
+    private bool isInit;
+
     public Thrust()
     {
-       
         pwmMotor = PwmChannel.Create(0, 0, 50, _pwmNeutral); // Initialisation avec la position neutre
         pwmMotor.Start();
-        //Thread.Sleep(3000);
-       
+        Thread.Sleep(4500);
+        isInit = true;
     }
 
     /// <summary>
@@ -38,6 +39,11 @@ public class Thrust
     /// <param name="speed"></param>
     public void SetSpeed(int speed)
     {
+        if (isInit == false)
+        {
+            Console.WriteLine("moteur pas init");
+            return;
+        }
         speed = Math.Clamp(speed, 0, 100); //
         
         // Mapper la vitesse de 0% à 100% vers la plage de PWM entre _pwmMin et _pwmMax
@@ -78,29 +84,41 @@ class SteeringTest
     {
         PwmChannel pwmSteering = PwmChannel.Create(0, 1, 50, 0.075); // Fréquence de 50 Hz, valeur initiale neutre
         pwmSteering.Start();
-
+        
+        float PWM = 6.7f / 100; // PWM neutre (tout droit)
+        pwmSteering.DutyCycle = PWM;
+        
         Console.WriteLine("Test des valeurs PWM pour la direction...");
-        Console.WriteLine(
-            "Entrez une valeur de PWM en pourcentage (ex: 6.0 pour gauche, 7.5 pour neutre, 9.0 pour droite). Tapez 'exit' pour quitter.");
+        
+
+        string input = "";
 
         while (true)
         {
-            Console.Write("PWM (%): ");
-            string input = Console.ReadLine();
+            Console.Write("PWM: ");
+            input = Console.ReadLine();
 
             if (input.ToLower() == "exit")
                 break;
 
-            if (double.TryParse(input, out double pwmValue))
+            if (input == "+")
             {
-                double dutyCycle = pwmValue / 100.0; // Conversion en fraction
-                pwmSteering.DutyCycle = dutyCycle;
-                Console.WriteLine($"PWM réglé à {pwmValue}%");
+                PWM += 0.1f / 100;
+            }
+            else if (input == "-")
+            {
+                PWM -= 0.1f / 100;
             }
             else
             {
-                Console.WriteLine("Valeur invalide, veuillez entrer un nombre.");
+                PWM = float.Parse(input)/ 100.0f;
             }
+            
+            
+            
+            pwmSteering.DutyCycle = PWM;
+            Console.WriteLine("PWM: " + PWM * 100);
+            
         }
 
         pwmSteering.Stop();
@@ -114,9 +132,9 @@ public class Steering
     private static PwmChannel pwmSteering;
 
     // Paramètres de la direction
-    private const float _anglePwmMin = 6.0f / 100; // PWM min (gauche)
-    private const float _anglePwmMax = 12.0f / 100; // PWM max (droite)
-    private const float _anglePwmCenter = 9f / 100; // PWM neutre (tout droit)
+    private const float _anglePwmMin = 3.8f / 100; // PWM min (gauche)
+    private const float _anglePwmMax =  8.2f / 100; // PWM max (droite)
+    private const float _anglePwmCenter = 5.5f / 100; // PWM neutre (tout droit)
     private const int _angleMax = 100; // Angle maximal en degrés
 
     private double DutyCycle;
