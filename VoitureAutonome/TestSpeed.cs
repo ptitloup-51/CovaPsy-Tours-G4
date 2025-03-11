@@ -17,8 +17,8 @@ public class TestSpeed
         // Ouvrir le périphérique SPI
         using (SpiDevice spiDevice = SpiDevice.Create(connectionSettings))
         {
-            byte[] txBuffer = {0x55, 0x55, 0, 2, 4, 6, 8}; // Buffer d'envoi
-            byte[] rxBuffer = new byte[txBuffer.Length]; // Buffer de réception
+            byte[] txBuffer = { 0x01 }; // Octet de requête
+            byte[] rxBuffer = new byte[8]; // Buffer de réception
             
             while (true)
             {
@@ -28,17 +28,21 @@ public class TestSpeed
                 Thread.Sleep(10);
                 
                 spiDevice.TransferFullDuplex(txBuffer, rxBuffer);
-
-                // Convertir les octets reçus en string
-                string message = Encoding.ASCII.GetString(rxBuffer);
                 
-                // Affichage du message reçu
-                Console.WriteLine($"Message reçu : {message.Trim()}");
-                Console.WriteLine("Reçu (HEX): " + BitConverter.ToString(rxBuffer));
-                Console.WriteLine("Reçu (Texte): " + Encoding.ASCII.GetString(rxBuffer));
+                // Vérification du message reçu
+                if (rxBuffer[0] == 'B') // Si ça commence par 'B' (Bonjour)
+                {
+                    string message = Encoding.ASCII.GetString(rxBuffer);
+                    Console.WriteLine($"Message reçu : {message}");
+                }
+                else
+                {
+                    float vitesse = BitConverter.ToSingle(rxBuffer, 0);
+                    Console.WriteLine($"Vitesse reçue : {vitesse:F2} m/s");
+                }
 
-                // Pause de 500ms
-                Thread.Sleep(500);
+                // Pause de 1s
+                Thread.Sleep(1000);
 
             }
         }
