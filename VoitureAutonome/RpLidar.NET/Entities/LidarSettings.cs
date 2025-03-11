@@ -15,11 +15,11 @@ namespace RpLidar.NET.Entities
         public LidarSettings()
         {
             Pwm = 660;
-            Type = 4;
+            Type = 3; // 4
             MaxDistance = 25000;
             BaudRate = 115200;
             Port = SerialPort.GetPortNames().ToList().LastOrDefault();
-            ElapsedMilliseconds = 400;
+            ElapsedMilliseconds = 1; //400
         }
 
         /// <summary>

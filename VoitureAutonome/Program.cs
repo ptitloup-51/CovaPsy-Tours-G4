@@ -6,7 +6,7 @@ using VoitureAutonome;
 public class Program
 {
 
-    private static AutoDriveV3 auto;
+    private static AutoDriveV4 auto;
     static Steering steering = new();
     
     static SteeringTest test = new();
@@ -20,9 +20,7 @@ public class Program
         
         RemoteDebug debug = new();
         
-        
-        
-        auto = new AutoDriveV3();
+        auto = new AutoDriveV4();
       
         debug.CommandCallback += HandleCommande;
         
@@ -54,10 +52,34 @@ public class Program
                 Console.WriteLine("nouveau radius : " + content);
                 auto.Radius = Convert.ToInt32(content);
                 break;
+            case "test":
+                Communication communication = new Communication();
+                communication.Com();
+                break;
+            case "scan":
+                ScanTest(Convert.ToInt32(content));
+                break;
             default:
                 Console.WriteLine("commande inconnue " + command);
                 break;
         }
     }
 
+    static void ScanTest(int time)
+    {
+        var lidar = new RPLidar("/dev/ttyUSB0", 256000);
+        lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
+        Thread.Sleep(time * 1000); // Attendre que le LIDAR soit prêt
+        lidar.Dispose();
+    }
+
+    private static void Lidar_LidarPointScanEvent(List<LidarPoint> points)
+    {
+       
+        foreach (var point in points)
+        {
+           Console.WriteLine(point.ToString());
+        }
+        
+    }
 }
