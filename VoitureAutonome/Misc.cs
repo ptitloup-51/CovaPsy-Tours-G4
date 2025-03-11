@@ -14,6 +14,24 @@ public class Misc
         return outMin + (x - inMin) * (outMax - outMin) / (inMax - inMin);
     }
     
+    public int ExponentialMap(float angle, float minAngle, float maxAngle, float minOutput, float maxOutput)
+    {
+        // Normaliser l'angle entre -1 et 1
+        float normalizedAngle = (angle - minAngle) / (maxAngle - minAngle) * 2 - 1;
+
+        // Appliquer une fonction exponentielle pour amplifier les valeurs extrêmes
+        float exponent = 0.05f; // Ajustez ce facteur pour contrôler l'agressivité du braquage //0.2f
+        float expValue = (float)Math.Pow(Math.Abs(normalizedAngle), exponent);
+
+        // Restaurer le signe
+        expValue *= Math.Sign(normalizedAngle);
+
+        // Remapper entre minOutput et maxOutput
+        float output = (expValue + 1) / 2 * (maxOutput - minOutput) + minOutput;
+
+        return (int)output;
+    }
+    
     public static float[] KalmanFilter(float[] input)
     {
         
