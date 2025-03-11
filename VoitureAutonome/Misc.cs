@@ -14,7 +14,7 @@ public class Misc
         return outMin + (x - inMin) * (outMax - outMin) / (inMax - inMin);
     }
     
-    public float[] KalmanFilter(float[] input)
+    public static float[] KalmanFilter(float[] input)
     {
         
         

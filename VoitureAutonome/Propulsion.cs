@@ -17,7 +17,7 @@ public class Thrust
     private static PwmChannel pwmMotor;
 
     // Correction des valeurs pour correspondre au comportement attendu
-    private const float _pwmMin = 8f / 100; // valeur min pour se déplacer
+    private const float _pwmMin = 7.9f / 100; // valeur min pour se déplacer
     private const float _pwmMax = 8.67f / 100; // Vitesse max
     private const float _pwmNeutral = 7.5f / 100; // 1.5 ms (Neutre)
 
@@ -113,7 +113,6 @@ class SteeringTest
             {
                 PWM = float.Parse(input)/ 100.0f;
             }
-            
             
             
             pwmSteering.DutyCycle = PWM;

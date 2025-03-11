@@ -30,7 +30,7 @@ public class AutoDriveV3
     Steering Steering = new Steering();
     Thrust Thrust = new Thrust();
 
-    public float Radius = 1700.0f;
+    public float Radius = 1000.0f;
 
     public AutoDriveV3()
     {
@@ -50,7 +50,7 @@ public class AutoDriveV3
         Steering.SetDirection(0);
         Thread.Sleep(5000);
         lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-        Thrust.SetSpeed(2);
+        Thrust.SetSpeed(3);
         
         
         
@@ -86,38 +86,42 @@ public class AutoDriveV3
                 end++;
             }
         }
+
+        /*
+        if (gaps.Count == 0) // s'il n'y a pas de gap
+        {
+            gaps.Add(new Gap { start = 0, end = 180 });
+            Console.WriteLine("pas de GAP");
+        }
+        */
         
         Gap bestGap = new Gap{ start = 0, end = 0 };
 
-        foreach (Gap gap in gaps) //on parcours tous les esapces remplis
+        foreach (Gap gap in gaps) //on parcours tous les espaces remplis
         {
             if (gap.GetGapLengh() > bestGap.GetGapLengh()) // on garde le meilleur gap, le plus large
             {
                 bestGap = gap;
             }
         }
-        
-        
-        
-        
-        
-        
 
-        if (bestGap.GetGapLengh() == 0) // Si on a pas de mesure de gap on continue tout droit jusqu'a trouver un obstacle
+        if (bestGap.GetGapLengh() == 0)
         {
-            Console.WriteLine("pas de GAP !");
-            bestGap.start = 80;
-            bestGap.end = 100;
+            bestGap.start = 0;
+            bestGap.end = 180;
         }
         
-        /*
+        
+        
+        
+        
         Console.WriteLine("------------");
         Console.WriteLine("start gap : " + bestGap.start);
         Console.WriteLine("mid gap : " + bestGap.GetMid());
         Console.WriteLine("end gap : " + bestGap.end);
         Console.WriteLine("Gap lenght : " + bestGap.GetGapLengh());
         Console.WriteLine("------------");
-        */
+        
         
         
         
@@ -144,10 +148,7 @@ public class AutoDriveV3
                 int angleIndex = (int)Math.Round(point.Angle) % 360;
                 lidarMemory360[angleIndex] = point.Distance; // on l'ajoute
             }
-            
-            
         }
-
         
         // Transformer les 360° en 180° en replaçant les valeurs correctement
         for (int i = 0; i < 180; i++)
