@@ -6,7 +6,7 @@ using RpLidar.NET.Entities;
 
 namespace VoitureAutonome
 {
-    public class AutoDriveV4
+    public class AutoDriveV5
     {
         public bool isRunning { get; set; }
         private float[] LidarPoints = new float[180];
@@ -15,9 +15,9 @@ namespace VoitureAutonome
         Steering Steering = new Steering();
         Thrust Thrust = new Thrust();
 
-        public float Radius = 200.0f; // Rayon de sécurité autour de l'obstacle
+        public float Radius = 400.0f; // Rayon de sécurité autour de l'obstacle
 
-        public AutoDriveV4()
+        public AutoDriveV5()
         {
             isRunning = false;
         }
@@ -30,15 +30,15 @@ namespace VoitureAutonome
             Steering.SetDirection(0);
             Thread.Sleep(5000); // Attendre que le LIDAR soit prêt
             lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-            Thrust.SetSpeed(15);
+            Thrust.SetSpeed(40);
 
             while (isRunning)
             {
                 int bestAngle = (int)FTG();
-                int steeringValue = Misc.MapValue(bestAngle, 0, 180, -100, 100);
+                int steeringValue = Misc.ExponentialMap(bestAngle, 0, 180, -100, 100);
                 Steering.SetDirection(steeringValue);
-              //  Console.WriteLine($"Meilleur angle : {bestAngle}, Direction : {steeringValue}");
-              //  Thread.Sleep(100); // Attendre avant la prochaine itération
+                Console.WriteLine($"Meilleur angle : {bestAngle}, Direction : {steeringValue}");
+                Thread.Sleep(100); // Attendre avant la prochaine itération
             }
 
             Thrust.Dispose();
@@ -67,6 +67,9 @@ namespace VoitureAutonome
                 Console.WriteLine("Aucune mesure valide. Arrêt.");
                 return 90; // Angle neutre (tout droit)
             }
+
+            // Ajuster dynamiquement le rayon de sécurité
+            Radius = GetDynamicRadius(minDistance);
 
             // Calcul des angles compris dans le cercle de sécurité
             float alpha = (float)Math.Acos(minDistance / Math.Sqrt(Math.Pow(minDistance, 2) + Math.Pow(Radius, 2))) *
@@ -105,6 +108,13 @@ namespace VoitureAutonome
                 }
             }
 
+            // Vérifier si le gap est suffisamment large
+            if (maxGapSize < 10) // Si le gap est trop petit, rester à l'arrêt
+            {
+                Console.WriteLine("Gap trop petit. Arrêt.");
+                return 90; // Angle neutre (tout droit)
+            }
+
             // Retourner l'angle médian du plus grand gap (0 = gauche, 180 = droite)
             return bestAngle;
         }
@@ -126,15 +136,8 @@ namespace VoitureAutonome
             // Mettre à jour uniquement les angles reçus
             foreach (var point in points)
             {
-                
                 int angleIndex = (int)Math.Round(point.Angle) % 360;
                 lidarMemory360[angleIndex] = point.Distance; // Mettre à jour la mémoire LIDAR
-                
-                /*if (point.Quality > 10 && point.Distance > 0) // Ignorer les mesures de qualité insuffisante ou nulles
-                {
-                    int angleIndex = (int)Math.Round(point.Angle) % 360;
-                    lidarMemory360[angleIndex] = point.Distance; // Mettre à jour la mémoire LIDAR
-                } */
             }
 
             // Transformer les 360° en 180° en replaçant les valeurs correctement
@@ -144,14 +147,43 @@ namespace VoitureAutonome
                 rawData180[i] = lidarMemory360[lidarAngle];
             }
 
-            // Appliquer le filtre de Kalman pour lisser les données
-            //LidarPoints = Misc.KalmanFilter(rawData180);
-            
-            LidarPoints = rawData180;
-
-           // Console.WriteLine($"Scan in {DateTime.Now.Millisecond - LastTime.Millisecond} ms");
+            // Appliquer le lissage des données
+            LidarPoints = SmoothLidarData(rawData180);
 
             LastTime = DateTime.Now;
+        }
+
+        private float[] SmoothLidarData(float[] rawData)
+        {
+            float[] smoothedData = new float[rawData.Length];
+            for (int i = 0; i < rawData.Length; i++)
+            {
+                if (rawData[i] == 0 && i > 0 && i < rawData.Length - 1)
+                {
+                    // Interpolation linéaire pour les valeurs manquantes
+                    smoothedData[i] = (rawData[i - 1] + rawData[i + 1]) / 2;
+                }
+                else
+                {
+                    smoothedData[i] = rawData[i];
+                }
+            }
+
+            // Filtre passe-bas pour lisser les données
+            float alpha = 0.2f; // Facteur de lissage (à ajuster)
+            for (int i = 1; i < smoothedData.Length; i++)
+            {
+                smoothedData[i] = alpha * smoothedData[i] + (1 - alpha) * smoothedData[i - 1];
+            }
+
+            return smoothedData;
+        }
+
+        public float GetDynamicRadius(float minDistance)
+        {
+            float baseRadius = 200.0f; // Rayon de base
+            float safetyMargin = 100.0f; // Marge de sécurité supplémentaire
+            return baseRadius + safetyMargin / minDistance; // Ajuster en fonction de la distance
         }
     }
 }

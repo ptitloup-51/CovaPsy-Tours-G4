@@ -50,7 +50,7 @@ public class AutoDriveV3
         Steering.SetDirection(0);
         Thread.Sleep(5000);
         lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-        Thrust.SetSpeed(3);
+        Thrust.SetSpeed(8);
         
         
         

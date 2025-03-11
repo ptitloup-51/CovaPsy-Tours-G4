@@ -86,7 +86,7 @@ public class AutodriveV2
         Steering.SetDirection(0);
         Thread.Sleep(4000);
         lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-        Thrust.SetSpeed(2);
+        Thrust.SetSpeed(5);
         
         int bestangle = 90;
         while (IsRunning)
