@@ -6,7 +6,7 @@ using RpLidar.NET.Entities;
 
 namespace VoitureAutonome
 {
-    public class AutoDriveV6
+    public class AutoDriveV7
     {
         public bool isRunning { get; set; }
         private float[] LidarPoints = new float[180];
@@ -15,11 +15,12 @@ namespace VoitureAutonome
         Steering Steering = new Steering();
         Thrust Thrust = new Thrust();
 
-        public float Radius = 400.0f; // Rayon de sécurité autour de l'obstacle
-        public int BaseSpeed = 15; // Vitesse de base
-        public int TurnSpeed = 5; // Vitesse réduite dans les virages
+        public float Radius = 500.0f; // Rayon de sécurité accru
+        public int BaseSpeed = 10; // Vitesse de base
+        public int TurnSpeed = 4; // Vitesse réduite dans les virages
+        public float EmergencyStopDistance = 200.0f; // Distance d'arrêt d'urgence
 
-        public AutoDriveV6()
+        public AutoDriveV7()
         {
             isRunning = false;
         }
@@ -40,12 +41,12 @@ namespace VoitureAutonome
                 int steeringValue = Misc.ExponentialMap(bestAngle, 0, 180, -100, 100);
                 Steering.SetDirection(steeringValue);
 
-                // Ajuster la vitesse en fonction de l'angle de virage
-                float speed = Math.Abs(steeringValue) > 50 ? TurnSpeed : BaseSpeed;
-                Thrust.SetSpeed(BaseSpeed);
+                // Ajuster la vitesse en fonction de l'angle de virage et de la distance aux obstacles
+                int speed = CalculateSafeSpeed(bestAngle);
+                Thrust.SetSpeed(speed);
 
-              //  Console.WriteLine($"Meilleur angle : {bestAngle}, Direction : {steeringValue}, Vitesse : {speed}");
-              //  Thread.Sleep(20); // Réduire le délai pour une réactivité accrue
+             //   Console.WriteLine($"Meilleur angle : {bestAngle}, Direction : {steeringValue}, Vitesse : {speed}");
+             //   Thread.Sleep(20); // Réduire le délai pour une réactivité accrue
             }
 
             Thrust.Dispose();
@@ -68,10 +69,11 @@ namespace VoitureAutonome
                 }
             }
 
-            // Si aucune distance valide n'est trouvée, rester à l'arrêt
-            if (minDistance == 10000)
+            // Si la distance est trop faible, arrêt d'urgence
+            if (minDistance < EmergencyStopDistance)
             {
-                Console.WriteLine("Aucune mesure valide. Arrêt.");
+                Console.WriteLine("Obstacle trop proche. Arrêt d'urgence.");
+                Thrust.SetSpeed(0);
                 return 90; // Angle neutre (tout droit)
             }
 
@@ -116,7 +118,7 @@ namespace VoitureAutonome
             }
 
             // Vérifier si le gap est suffisamment large
-            if (maxGapSize < 15) // Si le gap est trop petit, rester à l'arrêt
+            if (maxGapSize < 20) // Si le gap est trop petit, rester à l'arrêt
             {
                 Console.WriteLine("Gap trop petit. Arrêt.");
                 return 90; // Angle neutre (tout droit)
@@ -177,7 +179,7 @@ namespace VoitureAutonome
             }
 
             // Filtre passe-bas pour lisser les données
-            float alpha = 0.3f; // Facteur de lissage (ajusté pour plus de réactivité)
+            float alpha = 0.4f; // Facteur de lissage (ajusté pour plus de réactivité)
             for (int i = 1; i < smoothedData.Length; i++)
             {
                 smoothedData[i] = alpha * smoothedData[i] + (1 - alpha) * smoothedData[i - 1];
@@ -188,9 +190,35 @@ namespace VoitureAutonome
 
         public float GetDynamicRadius(float minDistance)
         {
-            float baseRadius = 400.0f; // Rayon de base
-            float safetyMargin = 100.0f; // Marge de sécurité supplémentaire
+            float baseRadius = 400.0f; // Rayon de base accru
+            float safetyMargin = 150.0f; // Marge de sécurité supplémentaire
             return baseRadius + safetyMargin / minDistance; // Ajuster en fonction de la distance
+        }
+
+        private int CalculateSafeSpeed(int bestAngle)
+        {
+            // Réduire la vitesse si l'angle de virage est important
+            if (Math.Abs(bestAngle - 90) > 45) // Si l'angle est supérieur à 45° par rapport à la droite
+            {
+                return TurnSpeed;
+            }
+
+            // Réduire la vitesse si un obstacle est proche
+            float minDistance = 10000;
+            for (int i = 0; i < 180; i++)
+            {
+                if (LidarPoints[i] > 0 && LidarPoints[i] < minDistance)
+                {
+                    minDistance = LidarPoints[i];
+                }
+            }
+
+            if (minDistance < EmergencyStopDistance * 2) // Si un obstacle est proche
+            {
+                return TurnSpeed;
+            }
+
+            return BaseSpeed;
         }
     }
 }
