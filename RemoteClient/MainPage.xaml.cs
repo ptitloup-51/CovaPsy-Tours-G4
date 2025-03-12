@@ -21,6 +21,9 @@ public partial class MainPage : ContentPage
             case "Heure":
                 TimeLabel.Text = value;
                 break;
+            case "vitesse":
+                SpeedLabel.Text = value;
+                break;
             case " ":
                 break;
         }

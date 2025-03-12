@@ -30,7 +30,7 @@ namespace VoitureAutonome
             Steering.SetDirection(0);
             Thread.Sleep(5000); // Attendre que le LIDAR soit prêt
             lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-            Thrust.SetSpeed(40);
+            Thrust.SetSpeed(10); //5 fonctionne bien
 
             while (isRunning)
             {
@@ -38,7 +38,7 @@ namespace VoitureAutonome
                 int steeringValue = Misc.ExponentialMap(bestAngle, 0, 180, -100, 100);
                 Steering.SetDirection(steeringValue);
                 Console.WriteLine($"Meilleur angle : {bestAngle}, Direction : {steeringValue}");
-                Thread.Sleep(100); // Attendre avant la prochaine itération
+               // Thread.Sleep(100); // Attendre avant la prochaine itération
             }
 
             Thrust.Dispose();
@@ -181,8 +181,8 @@ namespace VoitureAutonome
 
         public float GetDynamicRadius(float minDistance)
         {
-            float baseRadius = 200.0f; // Rayon de base
-            float safetyMargin = 100.0f; // Marge de sécurité supplémentaire
+            float baseRadius = 300.0f; // Rayon de base
+            float safetyMargin = 50.0f; // Marge de sécurité supplémentaire
             return baseRadius + safetyMargin / minDistance; // Ajuster en fonction de la distance
         }
     }

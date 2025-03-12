@@ -23,6 +23,7 @@ public class Listener
         
         Values.TryAdd("Heure", "..-..-..");
         Values.TryAdd("Temperature", "0°C");
+        Values.TryAdd("vitesse", "xx m/s");
         Values.TryAdd("Status", "not running");
 
         GetValues();
@@ -62,7 +63,7 @@ public class Listener
                     Console.WriteLine($"Erreur: {response.StatusCode}");
                 }
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(200);
         }
     }
 }

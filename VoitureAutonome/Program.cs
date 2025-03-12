@@ -6,26 +6,35 @@ using VoitureAutonome;
 public class Program
 {
 
-    private static AutoDriveV5 auto;
+    private static AutoDriveV6 auto;
     static Steering steering = new();
     
     static SteeringTest test = new();
+    
+    static STMCom stcom = new ();
+
+    private static RemoteDebug debug = new();
     
     private static void Main(string[] args)
     {
         Misc misc = new();
         misc.Test();
         
+        stcom.OnMessageReceive += StcomOnOnMessageReceive;
+        
        // test.Test();
-        
-        RemoteDebug debug = new();
-        
-        auto = new AutoDriveV5();
+       
+        auto = new AutoDriveV6();
       
         debug.CommandCallback += HandleCommande;
         
         Thread.Sleep(Timeout.Infinite);
         
+    }
+
+    private static void StcomOnOnMessageReceive(string message)
+    {
+        debug.Vitesse = message;
     }
 
 

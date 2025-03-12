@@ -11,7 +11,7 @@ namespace VoitureAutonome;
 /// </summary>
 public class RemoteDebug
 {
-
+    public string Vitesse { get; set; } = "xx m/s";
     public bool IsRunning;
     public RemoteDebug()
     {
@@ -107,6 +107,9 @@ public class RemoteDebug
                     break;
                 case "/angle":
                     responseString = "null";
+                    break;
+                case "/vitesse":
+                    responseString = Vitesse;
                     break;
                 default:
                     responseString = "pas de valeur";
