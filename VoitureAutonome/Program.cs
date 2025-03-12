@@ -6,7 +6,7 @@ using VoitureAutonome;
 public class Program
 {
 
-    private static AutoDriveV6 auto;
+    private static AutoDriveV7 auto;
     static Steering steering = new();
     
     static SteeringTest test = new();
@@ -24,7 +24,7 @@ public class Program
         
        // test.Test();
        
-        auto = new AutoDriveV6();
+        auto = new AutoDriveV7();
       
         debug.CommandCallback += HandleCommande;
         
@@ -59,7 +59,7 @@ public class Program
                 break;
             case "radius":
                 Console.WriteLine("nouveau radius : " + content);
-                auto.Radius = Convert.ToInt32(content);
+               // auto.Radius = Convert.ToInt32(content);
                 break;
             case "test":
                 Communication communication = new Communication();

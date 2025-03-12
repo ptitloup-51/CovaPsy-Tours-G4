@@ -41,7 +41,7 @@ public class AutodriveV2
         int currentGapStart = -1;
         int currentGapSize = 0;
     
-        float minSafeDistance = 300f; // Seuil de distance acceptable pour avancer
+        float minSafeDistance = 500f; // Seuil de distance acceptable pour avancer
 
         for (int i = 0; i < LidarPoints.Length; i++)
         {
@@ -93,7 +93,7 @@ public class AutodriveV2
         {
             bestangle = FindLongestPath();
             Console.WriteLine(Misc.MapValue(bestangle, 0, 180, -100, 100));
-            Steering.SetDirection(Misc.MapValue(bestangle, 0, 180, -100, 100));
+            Steering.SetDirection(Misc.ExponentialMap(bestangle, 0, 180, -100, 100));
            // Console.WriteLine(bestangle); 
         }
         

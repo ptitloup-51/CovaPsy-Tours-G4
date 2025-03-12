@@ -9,16 +9,18 @@ namespace VoitureAutonome
     public class AutoDriveV7
     {
         public bool isRunning { get; set; }
-        private float[] LidarPoints = new float[180];
+        private float[] LidarPoints = new float[180]; // Tableau pour les 180° avant
+        private DateTime[] LidarTimestamps = new DateTime[180]; // Timestamps des points LIDAR
 
         Misc Misc = new Misc();
         Steering Steering = new Steering();
         Thrust Thrust = new Thrust();
 
         public float Radius = 500.0f; // Rayon de sécurité accru
-        public int BaseSpeed = 10; // Vitesse de base
-        public int TurnSpeed = 4; // Vitesse réduite dans les virages
+        public int BaseSpeed = 20; // Vitesse de base
+        public int TurnSpeed = 10; // Vitesse réduite dans les virages
         public float EmergencyStopDistance = 200.0f; // Distance d'arrêt d'urgence
+        public float MaxPointAgeSeconds = 1.0f; // Durée de vie maximale d'un point LIDAR (en secondes)
 
         public AutoDriveV7()
         {
@@ -45,8 +47,8 @@ namespace VoitureAutonome
                 int speed = CalculateSafeSpeed(bestAngle);
                 Thrust.SetSpeed(speed);
 
-             //   Console.WriteLine($"Meilleur angle : {bestAngle}, Direction : {steeringValue}, Vitesse : {speed}");
-             //   Thread.Sleep(20); // Réduire le délai pour une réactivité accrue
+                // Console.WriteLine($"Meilleur angle : {bestAngle}, Direction : {steeringValue}, Vitesse : {speed}");
+               // Thread.Sleep(20); // Réduire le délai pour une réactivité accrue
             }
 
             Thrust.Dispose();
@@ -62,7 +64,7 @@ namespace VoitureAutonome
             // Trouver la distance minimale valide et l'angle correspondant
             for (int i = 0; i < 180; i++)
             {
-                if (LidarPoints[i] > 0 && LidarPoints[i] < minDistance) // Ignorer les distances nulles
+                if (IsPointValid(i) && LidarPoints[i] > 0 && LidarPoints[i] < minDistance) // Ignorer les points invalides et les distances nulles
                 {
                     minDistance = LidarPoints[i];
                     angle = i;
@@ -96,7 +98,7 @@ namespace VoitureAutonome
             {
                 if (i < startangle || i > endangle)
                 {
-                    if (LidarPoints[i] > minDistance + Radius && LidarPoints[i] > 0) // Ignorer les distances nulles
+                    if (IsPointValid(i) && LidarPoints[i] > minDistance + Radius && LidarPoints[i] > 0) // Ignorer les points invalides et les distances nulles
                     {
                         if (currentGapStart == 0)
                         {
@@ -135,8 +137,7 @@ namespace VoitureAutonome
 
         // Stockage global des valeurs précédentes (mémoire du dernier scan)
         private float[] lidarMemory360 = new float[360];
-
-        DateTime LastTime = DateTime.Now;
+        private DateTime[] lidarTimestamps360 = new DateTime[360]; // Timestamps des points LIDAR
 
         private void Lidar_LidarPointScanEvent(List<LidarPoint> points)
         {
@@ -147,6 +148,7 @@ namespace VoitureAutonome
             {
                 int angleIndex = (int)Math.Round(point.Angle) % 360;
                 lidarMemory360[angleIndex] = point.Distance; // Mettre à jour la mémoire LIDAR
+                lidarTimestamps360[angleIndex] = DateTime.Now; // Mettre à jour le timestamp
             }
 
             // Transformer les 360° en 180° en replaçant les valeurs correctement
@@ -154,12 +156,11 @@ namespace VoitureAutonome
             {
                 int lidarAngle = (i - 90 + 360) % 360; // Décalage pour centrer sur 90°
                 rawData180[i] = lidarMemory360[lidarAngle];
+                LidarTimestamps[i] = lidarTimestamps360[lidarAngle]; // Mettre à jour les timestamps
             }
 
             // Appliquer le lissage des données
             LidarPoints = SmoothLidarData(rawData180);
-
-            LastTime = DateTime.Now;
         }
 
         private float[] SmoothLidarData(float[] rawData)
@@ -188,10 +189,17 @@ namespace VoitureAutonome
             return smoothedData;
         }
 
+        private bool IsPointValid(int angleIndex)
+        {
+            // Vérifier si le point est trop ancien
+            TimeSpan age = DateTime.Now - LidarTimestamps[angleIndex];
+            return age.TotalSeconds <= MaxPointAgeSeconds;
+        }
+
         public float GetDynamicRadius(float minDistance)
         {
-            float baseRadius = 400.0f; // Rayon de base accru
-            float safetyMargin = 150.0f; // Marge de sécurité supplémentaire
+            float baseRadius = 800.0f; // Rayon de base accru //1100
+            float safetyMargin = 230.0f; // Marge de sécurité supplémentaire
             return baseRadius + safetyMargin / minDistance; // Ajuster en fonction de la distance
         }
 
@@ -207,7 +215,7 @@ namespace VoitureAutonome
             float minDistance = 10000;
             for (int i = 0; i < 180; i++)
             {
-                if (LidarPoints[i] > 0 && LidarPoints[i] < minDistance)
+                if (IsPointValid(i) && LidarPoints[i] > 0 && LidarPoints[i] < minDistance)
                 {
                     minDistance = LidarPoints[i];
                 }
