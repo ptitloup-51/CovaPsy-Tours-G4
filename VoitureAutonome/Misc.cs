@@ -9,9 +9,11 @@ public class Misc
     private static float R = 0.1f;   // Bruit de mesure du LiDAR
     
     
-    public int MapValue(int x, int inMin, int inMax, int outMin, int outMax)
+    public int LinearMap(float angle, float minAngle, float maxAngle, float minOutput, float maxOutput)
     {
-        return outMin + (x - inMin) * (outMax - outMin) / (inMax - inMin);
+        // Mapper linéairement l'angle entre minOutput et maxOutput
+        float output = minOutput + (angle - minAngle) * (maxOutput - minOutput) / (maxAngle - minAngle);
+        return (int)output;
     }
     
     public int ExponentialMap(float angle, float minAngle, float maxAngle, float minOutput, float maxOutput)
@@ -20,7 +22,7 @@ public class Misc
         float normalizedAngle = (angle - minAngle) / (maxAngle - minAngle) * 2 - 1;
 
         // Appliquer une fonction exponentielle pour amplifier les valeurs extrêmes
-        float exponent = 0.05f; // Ajustez ce facteur pour contrôler l'agressivité du braquage //0.2f
+        float exponent = 0.5f; // Ajustez ce facteur pour contrôler l'agressivité du braquage //0.05f
         float expValue = (float)Math.Pow(Math.Abs(normalizedAngle), exponent);
 
         // Restaurer le signe

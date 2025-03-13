@@ -6,7 +6,7 @@ using VoitureAutonome;
 public class Program
 {
 
-    private static AutoDriveV7 auto;
+    private static AutodriveV2 auto;
     static Steering steering = new();
     
     static SteeringTest test = new();
@@ -24,7 +24,7 @@ public class Program
         
        // test.Test();
        
-        auto = new AutoDriveV7();
+        auto = new();
       
         debug.CommandCallback += HandleCommande;
         

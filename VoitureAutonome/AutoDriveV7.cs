@@ -20,7 +20,7 @@ namespace VoitureAutonome
         public int BaseSpeed = 20; // Vitesse de base
         public int TurnSpeed = 10; // Vitesse réduite dans les virages
         public float EmergencyStopDistance = 200.0f; // Distance d'arrêt d'urgence
-        public float MaxPointAgeSeconds = 1.0f; // Durée de vie maximale d'un point LIDAR (en secondes)
+        public float MaxPointAgeSeconds = 0.5f; // Durée de vie maximale d'un point LIDAR (en secondes)
 
         public AutoDriveV7()
         {
@@ -33,7 +33,7 @@ namespace VoitureAutonome
 
             var lidar = new RPLidar("/dev/ttyUSB0", 256000);
             Steering.SetDirection(0);
-            Thread.Sleep(5000); // Attendre que le LIDAR soit prêt
+            // Thread.Sleep(5000); // Attendre que le LIDAR soit prêt
             lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
             Thrust.SetSpeed(BaseSpeed);
 
@@ -71,6 +71,7 @@ namespace VoitureAutonome
                 }
             }
 
+            /*
             // Si la distance est trop faible, arrêt d'urgence
             if (minDistance < EmergencyStopDistance)
             {
@@ -78,6 +79,7 @@ namespace VoitureAutonome
                 Thrust.SetSpeed(0);
                 return 90; // Angle neutre (tout droit)
             }
+            */
 
             // Ajuster dynamiquement le rayon de sécurité
             Radius = GetDynamicRadius(minDistance);
@@ -119,12 +121,14 @@ namespace VoitureAutonome
                 }
             }
 
+            /*
             // Vérifier si le gap est suffisamment large
             if (maxGapSize < 20) // Si le gap est trop petit, rester à l'arrêt
             {
                 Console.WriteLine("Gap trop petit. Arrêt.");
                 return 90; // Angle neutre (tout droit)
             }
+            */
 
             // Retourner l'angle médian du plus grand gap (0 = gauche, 180 = droite)
             return bestAngle;
@@ -198,7 +202,7 @@ namespace VoitureAutonome
 
         public float GetDynamicRadius(float minDistance)
         {
-            float baseRadius = 800.0f; // Rayon de base accru //1100
+            float baseRadius = 900.0f; // Rayon de base accru //800
             float safetyMargin = 230.0f; // Marge de sécurité supplémentaire
             return baseRadius + safetyMargin / minDistance; // Ajuster en fonction de la distance
         }

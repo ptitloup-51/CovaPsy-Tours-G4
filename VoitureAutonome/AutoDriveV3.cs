@@ -57,7 +57,7 @@ public class AutoDriveV3
         while (isRunning)
         {
         //    Console.WriteLine("Follow the gap angle : " + FollowTheGap());
-        Steering.SetDirection(Misc.MapValue((int)FollowTheGap(), 0, 180, -100, 100));
+        Steering.SetDirection(Misc.LinearMap((int)FollowTheGap(), 0, 180, -100, 100));
         }
         
         Thrust.Dispose();

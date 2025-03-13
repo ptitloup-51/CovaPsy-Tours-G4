@@ -35,7 +35,7 @@ namespace VoitureAutonome
             while (isRunning)
             {
                 int bestAngle = (int)FTG();
-                int steeringValue = Misc.MapValue(bestAngle, 0, 180, -100, 100);
+                int steeringValue = Misc.LinearMap(bestAngle, 0, 180, -100, 100);
                 Steering.SetDirection(steeringValue);
               //  Console.WriteLine($"Meilleur angle : {bestAngle}, Direction : {steeringValue}");
               //  Thread.Sleep(100); // Attendre avant la prochaine itération
