@@ -7,6 +7,7 @@ using RpLidar.NET.Entities;
 
 namespace VoitureAutonome
 {
+    //Version fonctionnelle 
     public class AutodriveV2
     {
         private bool IsRunning;
