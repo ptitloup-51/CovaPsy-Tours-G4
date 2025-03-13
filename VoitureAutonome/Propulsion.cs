@@ -132,7 +132,7 @@ public class Steering
 
     // Paramètres de la direction
     private const float _anglePwmMin = 3.8f / 100; // PWM min (gauche)
-    private const float _anglePwmMax =  8.2f / 100; // PWM max (droite)
+    private const float _anglePwmMax =  8.6f / 100; // PWM max (droite)
     private const float _anglePwmCenter = 5.5f / 100; // PWM neutre (tout droit)
     private const int _angleMax = 100; // Angle maximal en degrés
 

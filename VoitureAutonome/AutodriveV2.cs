@@ -7,7 +7,7 @@ using RpLidar.NET.Entities;
 
 namespace VoitureAutonome
 {
-    //Version fonctionnelle 
+    // Version fonctionnelle avec ralentissement dans les virages
     public class AutodriveV2
     {
         private bool IsRunning;
@@ -17,9 +17,11 @@ namespace VoitureAutonome
         private Misc Misc = new Misc();
         private Steering Steering = new Steering();
         private Thrust Thrust = new Thrust();
-        
-        float minSafeDistance = 1200; // Seuil de distance acceptable pour avancer
-        int speed = 25;
+
+        float minSafeDistance = 1400; // Seuil de distance acceptable pour avancer
+        int maxSpeed = 25; // Vitesse maximale
+        int minSpeed = 10; // Vitesse minimale dans les virages
+        int speed = 25; // Vitesse actuelle
 
         public AutodriveV2()
         {
@@ -48,8 +50,6 @@ namespace VoitureAutonome
             float maxGapSize = 0;
             int currentGapStart = -1;
             int currentGapSize = 0;
-
-           
 
             for (int i = 0; i < LidarPoints.Length; i++)
             {
@@ -82,7 +82,6 @@ namespace VoitureAutonome
             // Correction pour éviter des valeurs en dehors de [0,180]
             bestAngle = Math.Clamp(bestAngle, 0, 180);
 
-          //  Console.WriteLine($"Best Angle: {bestAngle}");
             return bestAngle;
         }
 
@@ -94,20 +93,52 @@ namespace VoitureAutonome
             Steering.SetDirection(0);
             Thread.Sleep(4000);
             lidar.LidarPointScanEvent += Lidar_LidarPointScanEvent;
-           
+
             Thrust.SetSpeed(speed);
 
             int bestAngle = 90;
             while (IsRunning)
             {
                 bestAngle = FindBestDirection();
-              //  Console.WriteLine($"Best Angle: {bestAngle}");
+                AdjustSpeed(bestAngle); // Ajuster la vitesse en fonction de la direction
                 Steering.SetDirection(Misc.ExponentialMap(bestAngle, 0, 180, -100, 100));
             }
 
             Thrust.Dispose();
             Steering.Dispose();
             lidar.Dispose();
+        }
+
+        private void AdjustSpeed(int bestAngle)
+        {
+            // Définir une plage d'angles autour de la direction actuelle pour vérifier les obstacles
+            int angleRange = 30; // Plage de ±30 degrés autour de la direction
+            float minDistanceInRange = float.MaxValue;
+
+            // Trouver la distance minimale dans la plage d'angles
+            for (int i = bestAngle - angleRange; i <= bestAngle + angleRange; i++)
+            {
+                int clampedIndex = Math.Clamp(i, 0, 179);
+                if (LidarPoints[clampedIndex] > 0 && LidarPoints[clampedIndex] < minDistanceInRange)
+                {
+                    minDistanceInRange = LidarPoints[clampedIndex];
+                }
+            }
+
+            // Si aucune distance valide n'est trouvée, utiliser la distance maximale
+            if (minDistanceInRange == float.MaxValue)
+            {
+                minDistanceInRange = minSafeDistance * 2; // Valeur par défaut
+            }
+
+            // Ajuster la vitesse en fonction de la distance minimale
+            float speedFactor = Math.Clamp((minDistanceInRange - minSafeDistance) / minSafeDistance, 0, 1);
+            speed = (int)(minSpeed + (maxSpeed - minSpeed) * speedFactor);
+
+            // Appliquer la nouvelle vitesse
+            Thrust.SetSpeed(speed);
+
+          //  Console.WriteLine($"Min Distance in Range: {minDistanceInRange}, Adjusted Speed: {speed}");
         }
 
         private void Lidar_LidarPointScanEvent(List<LidarPoint> points)
@@ -122,7 +153,7 @@ namespace VoitureAutonome
                 LidarTimestamps360[angleIndex] = currentTime; // Mettre à jour le timestamp
             }
 
-            // Filtrer les points trop vieux (plus de 1 seconde)
+            // Filtrer les points trop vieux (plus de 0.6 seconde)
             for (int i = 0; i < 360; i++)
             {
                 if ((currentTime - LidarTimestamps360[i]).TotalSeconds > 0.6f)
