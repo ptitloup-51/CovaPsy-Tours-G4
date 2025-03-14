@@ -46,7 +46,7 @@ Contient le projet CubeIDE pour la carte STM32, qui gère :
 | Servo moteur | Konect 0913LVMG           |
 | Esc         | ?                         |
 | Lidar       | Slamtec A2M12             |
-| STM32       |                           |
+| STM32       | STM32G431KB                          |
 | Batterie    | T2M Ni-MH de 3000mAh 7,2V |
 
 
