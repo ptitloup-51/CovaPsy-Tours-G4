@@ -19,6 +19,8 @@ public class AutodriveV2
     private int speed = 20; // Vitesse actuelle
     private readonly Steering Steering = new();
     private readonly Thrust Thrust = new();
+    
+    public int angleShare = 0;
 
     public AutodriveV2()
     {
@@ -62,6 +64,8 @@ public class AutodriveV2
 
         // Correction pour éviter des valeurs en dehors de [0,180]
         bestAngle = Math.Clamp(bestAngle, 0, 180);
+        
+        angleShare = bestAngle; //partage du meilleur angle
 
         return bestAngle;
     }

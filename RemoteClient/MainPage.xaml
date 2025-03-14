@@ -1,52 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="RemoteClient.MainPage">
-    <VerticalStackLayout Spacing="20" Padding="20" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+             x:Class="RemoteClient.MainPage"
+             BackgroundColor="#F5F5F5">
+    
+    <VerticalStackLayout Spacing="25" Padding="20" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         
-        <!-- Image -->
-        <Image Source="dotnet_bot.png" HeightRequest="100" HorizontalOptions="Center"/>
+        <!-- Logo -->
+        <Image Source="dotnet_bot.png" HeightRequest="120" HorizontalOptions="Center"/>
         
-        <!-- Adresse IP & Port -->
-        <Frame CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD" HorizontalOptions="FillAndExpand">
-            <VerticalStackLayout Spacing="10">
-                <Label Text="Configuration de connexion" FontSize="18" FontFamily="QuicksandBold" FontAttributes="Bold" HorizontalOptions="Center"/>
-               
-                    
-                    <HorizontalStackLayout HorizontalOptions="Center">
-                        <HorizontalStackLayout Padding="0,0,10,0">
-                            <Label Text="Adresse IP:"  FontFamily="QuicksandBold" VerticalTextAlignment="Center"/>
-                            <Entry Placeholder="192.168.2.127" x:Name="Address" WidthRequest="150"/>
-                        </HorizontalStackLayout>
-                    
-                        <HorizontalStackLayout Padding="10,0,10,0">
-                            <Label Text="Port:" FontFamily="QuicksandBold" VerticalTextAlignment="Center"/>
-                            <Entry Placeholder="5555" x:Name="Port" WidthRequest="100"/>
-                        </HorizontalStackLayout>
-                        
-                        <Button Text="Connexion" WidthRequest="100" Padding="10,0,0,0" Clicked="Connect_OnClicked" x:Name="ConnexionBTN"></Button>
-                        
-                    </HorizontalStackLayout>
+        <!-- Connexion -->
+        <Frame CornerRadius="12" Padding="20" BackgroundColor="White" BorderColor="#E0E0E0" HorizontalOptions="FillAndExpand">
+            <VerticalStackLayout Spacing="15">
+                <Label Text="Connexion au Serveur" FontSize="20" FontAttributes="Bold" TextColor="#333" HorizontalOptions="Center"/>
                 
-                
-                
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                    <Entry Placeholder="Adresse IP" x:Name="Address" WidthRequest="120" Keyboard="Numeric" HorizontalTextAlignment="Center"/>
+                    <Entry Placeholder="Port" x:Name="Port" WidthRequest="60" Keyboard="Numeric" HorizontalTextAlignment="Center"/>
+                    <Button Text="Connecter" WidthRequest="120" Clicked="Connect_OnClicked" x:Name="ConnexionBTN"
+                            BackgroundColor="#007AFF" TextColor="White" CornerRadius="8"/>
+                </HorizontalStackLayout>
             </VerticalStackLayout>
         </Frame>
-
-        <!-- Boutons -->
-        <HorizontalStackLayout Spacing="20" HorizontalOptions="FillAndExpand" x:Name="CommandBox" IsEnabled="False">
+        
+        <!-- Commandes -->
+        <HorizontalStackLayout Spacing="15" HorizontalOptions="FillAndExpand" x:Name="CommandBox" IsEnabled="False">
             <Button Text="🚗 Démarrer" x:Name="StartButton" Clicked="Start_OnClicked" 
-                    BackgroundColor="#4CAF50" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
+                    BackgroundColor="#4CAF50" TextColor="White" CornerRadius="12" FontSize="16" HorizontalOptions="FillAndExpand"/>
             <Button Text="🛑 Arrêter" x:Name="StopButton" Clicked="StopButton_OnClicked" 
-                    BackgroundColor="#F44336" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
-            <Button Text="💀 Tuer le programme"  x:Name="KillButton" Clicked="KillButton_OnClicked"
-                    BackgroundColor="#000000" TextColor="White" CornerRadius="10" Padding="10" HorizontalOptions="FillAndExpand"/>
+                    BackgroundColor="#F44336" TextColor="White" CornerRadius="12" FontSize="16" HorizontalOptions="FillAndExpand"/>
+            <Button Text="💀 Tuer" x:Name="KillButton" Clicked="KillButton_OnClicked"
+                    BackgroundColor="#333333" TextColor="White" CornerRadius="12" FontSize="16" HorizontalOptions="FillAndExpand"/>
         </HorizontalStackLayout>
-
+        
         <!-- Télémétrie -->
-        <Grid ColumnSpacing="10" RowSpacing="10" Padding="10" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Grid ColumnSpacing="12" RowSpacing="12" Padding="10" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -55,26 +44,16 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
-            <Frame Grid.Row="0" Grid.Column="0" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
-                <Label x:Name="TempLabel" Text="Température: -- °C" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Frame Grid.Row="0" Grid.Column="0" CornerRadius="12" Padding="18" BackgroundColor="White" BorderColor="#E0E0E0">
+                <Label x:Name="TimeLabel" Text="Heure: --:--:--" FontSize="18" FontAttributes="Bold" TextColor="#333" HorizontalOptions="Center"/>
             </Frame>
-            <Frame Grid.Row="0" Grid.Column="1" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
-                <Label x:Name="TimeLabel" Text="Heure: --:--:--" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Frame Grid.Row="0" Grid.Column="1" CornerRadius="12" Padding="18" BackgroundColor="White" BorderColor="#E0E0E0">
+                <Label x:Name="SpeedLabel" Text="Vitesse: -- km/h" FontSize="18" FontAttributes="Bold" TextColor="#333" HorizontalOptions="Center"/>
             </Frame>
-            <Frame Grid.Row="1" Grid.Column="0" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
-                <Label x:Name="RollLabel" Text="Roulis: --°" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-            </Frame>
-            <Frame Grid.Row="1" Grid.Column="1" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
-                <Label x:Name="SpeedLabel" Text="Vitesse: -- km/h" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-            </Frame>
-            <Frame Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" CornerRadius="10" Padding="15" BackgroundColor="White" BorderColor="#DDD">
-                <Label x:Name="SteeringLabel" Text="Angle direction: --°" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" CornerRadius="12" Padding="18" BackgroundColor="White" BorderColor="#E0E0E0">
+                <Label x:Name="SteeringLabel" Text="Angle direction: --°" FontSize="18" FontAttributes="Bold" TextColor="#333" HorizontalOptions="Center"/>
             </Frame>
         </Grid>
         
-        <Entry Placeholder="Radius value" x:Name="RaduisEntry"></Entry>
-        <Button Text="Send" x:Name="SendRadius" Clicked="SendRadius_OnClicked"></Button>
-
     </VerticalStackLayout>
-
 </ContentPage>

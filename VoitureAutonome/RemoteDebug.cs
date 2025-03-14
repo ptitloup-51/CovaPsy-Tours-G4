@@ -12,6 +12,7 @@ namespace VoitureAutonome;
 public class RemoteDebug
 {
     public string Vitesse { get; set; } = "xx m/s";
+    public int angle { get; set; } = 90;
     public bool IsRunning;
     public RemoteDebug()
     {
@@ -113,11 +114,11 @@ public class RemoteDebug
                 case "/Status":
                     responseString = IsRunning? "yes" : "no";
                     break;
-                case "/angle":
-                    responseString = "null";
-                    break;
                 case "/vitesse":
                     responseString = Vitesse;
+                    break;
+                case "/Angle":
+                    responseString = angle.ToString();
                     break;
                 default:
                     responseString = "pas de valeur";

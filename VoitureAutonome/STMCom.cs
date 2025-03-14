@@ -52,7 +52,7 @@ public class STMCom
                 float vitesse = BitConverter.ToSingle(rxBuffer, 0);
               //  Console.WriteLine($"Vitesse reçue : {vitesse:F2} m/s");
                 
-                OnMessageReceive?.Invoke(vitesse.ToString());
+                OnMessageReceive?.Invoke(Math.Round(vitesse).ToString() + "mm/s");
 
                 // Pause de 1s
                 Thread.Sleep(100);

@@ -24,6 +24,9 @@ public partial class MainPage : ContentPage
             case "vitesse":
                 SpeedLabel.Text = value;
                 break;
+            case "Angle":
+                SteeringLabel.Text = value;
+                break;
             case " ":
                 break;
         }
@@ -59,9 +62,10 @@ public partial class MainPage : ContentPage
 
     private bool canSend = false;
    
-
+/*
     private void SendRadius_OnClicked(object? sender, EventArgs e)
     {
         Listener.Send("radius", RaduisEntry.Text);
     }
+    */
 }

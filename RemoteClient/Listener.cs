@@ -25,6 +25,7 @@ public class Listener
         Values.TryAdd("Temperature", "0°C");
         Values.TryAdd("vitesse", "xx m/s");
         Values.TryAdd("Status", "not running");
+        Values.TryAdd("Angle", "0°");
 
         GetValues();
     }

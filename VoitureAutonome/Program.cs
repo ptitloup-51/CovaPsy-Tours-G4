@@ -32,6 +32,7 @@ public class Program
     private static void StcomOnOnMessageReceive(string message)
     {
         debug.Vitesse = message;
+        debug.angle = auto.angleShare;
     }
 
 
