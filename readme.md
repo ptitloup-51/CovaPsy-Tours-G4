@@ -20,12 +20,13 @@ Contient le projet en C# déployé sur le Raspberry Pi. Ce programme gère :
 - Le capteur LiDAR pour la détection d'obstacles et le guidage
 - La communication avec la carte STM32 via SPI
 - La gestion du serveur web permettant de recevoir des requêtes API
-- Le pilotage de la voiture via une interface externe
+- La gestion de la direction et de la propulsion
+- l'algorithme de follow the gap
 
 ### 📱️ Dossier `Remote Client`
 Contient le projet d'interface utilisateur, développé en C# avec MAUI. Cette interface permet de :
 - Superviser l'état du véhicule en temps réel
-- Envoyer des commandes de pilotage à la voiture via API
+- démarrer et arrêter la voiture
 
 ### 🎚️ Dossier `STM32`
 Contient le projet CubeIDE pour la carte STM32, qui gère :
@@ -37,7 +38,16 @@ Contient le projet CubeIDE pour la carte STM32, qui gère :
 ---
 ## 📝 Caractéristiques Techniques
 
-### 🔋 Capteurs et Actionneurs
+| Matériel    | Référence                 |
+|-------------|---------------------------|
+| Moteur      | Mabushi RS-540            |
+| Servo moteur | Konect 0913LVMG           |
+| Esc         | ?                         |
+| Lidar       | Slamtec A2M12             |
+| STM32       |                           |
+| Batterie    | T2M Ni-MH de 3000mAh 7,2V |
+
+
 
 ---
 ## 📚 Plan de Développement
@@ -84,10 +94,12 @@ Le Raspberry Pi effectue la majeure partie du traitement car il est plus puissan
 
 | Version | Détails |
 |---------|---------|
-| **5.0** | Dernière version stable |
-| **5.1** | Dernière version en développement |
+| **1.0** | Dernière version |
 
-[Voir toutes les versions](https://github.com/your/project-name/tags)
+_Contient le code source de Remote Client, Le code source de Voiture Autonome, Le code source de STM32 ainsi que les versions compilés de RemoteClient et Voiture Autonome._
+
+
+[Voir toutes les versions](https://github.com/ptitloup-51/SAES6/tags)
 
 ---
 ## 👤 Auteurs
