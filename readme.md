@@ -11,6 +11,7 @@ La voiture fonctionne de manière totalement autonome, et la seule interaction u
 
 Le git du concours est disponible sur ce [dépôt GitHub](https://github.com/ajuton-ens/CourseVoituresAutonomesSaclay)
 
+![photo du véhicule](https://github.com/ptitloup-51/SAES6/blob/main/Documents/Photos/Sujet.png)
 ---
 ## 🗂️ Architecture du Projet
 Le projet est structuré en trois dossiers principaux :
