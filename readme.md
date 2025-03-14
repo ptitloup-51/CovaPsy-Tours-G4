@@ -5,11 +5,11 @@
 
 ## 🏎️ Projet : Voiture Autonome
 
-Ce projet a pour objectif de développer une voiture autonome capable de participer à une course sur un circuit prédéfini. L'ensemble du système repose principalement sur un Raspberry Pi et une carte STM32, chacun ayant des rôles bien définis.
+Ce projet a pour objectif de développer une voiture autonome capable de participer à une course sur un circuit dont le tracé n'est pas connu à l'avance. L'ensemble du système repose principalement sur un Raspberry Pi et une carte STM32, chacun ayant des rôles bien définis.
 
-La voiture fonctionne de manière totalement autonome, et la seule interaction utilisateur consiste à démarrer le programme via les boutons présents sur la voiture.
+La voiture fonctionne de manière totalement autonome, et la seule interaction utilisateur consiste à mettre sous tension le véhicule, puis via l'interface utilisateur cliquer sur démarrer. Le programme se lance automatiquement à la mise sous tension du raspberry Pi.
 
-Le code source est disponible sur ce [dépôt GitHub](https://github.com/ajuton-ens/CourseVoituresAutonomesSaclay).
+Le git du concours est disponible sur ce [dépôt GitHub](https://github.com/ajuton-ens/CourseVoituresAutonomesSaclay)
 
 ---
 ## 🗂️ Architecture du Projet
