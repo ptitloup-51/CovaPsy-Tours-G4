@@ -29,9 +29,11 @@ Contient le projet en C# déployé sur le Raspberry Pi. Ce programme gère :
 Contient le projet d'interface utilisateur, développé en C# avec MAUI. Cette interface permet de :
 - Superviser l'état du véhicule en temps réel
 - démarrer et arrêter la voiture
-
-<img height="80" src="https://github.com/ptitloup-51/SAES6/blob/main/Documents/Photos/Simulator%20Screenshot%20-%20iPhone%2016%20-%202025-03-14%20at%2015.29.53.png"/>
-<img height="80" src="https://github.com/ptitloup-51/SAES6/blob/main/Documents/Photos/Simulator%20Screenshot%20-%20iPhone%2016%20-%202025-03-14%20at%2015.33.29.png"/>
+- 
+<p align="center">
+    <img height="200" src="https://github.com/ptitloup-51/SAES6/blob/main/Documents/Photos/Simulator%20Screenshot%20-%20iPhone%2016%20-%202025-03-14%20at%2015.29.53.png"/>
+    <img height="200" src="https://github.com/ptitloup-51/SAES6/blob/main/Documents/Photos/Simulator%20Screenshot%20-%20iPhone%2016%20-%202025-03-14%20at%2015.33.29.png"/>
+</p>
 
 ### 🎚️ Dossier `STM32`
 Contient le projet CubeIDE pour la carte STM32, qui gère :
