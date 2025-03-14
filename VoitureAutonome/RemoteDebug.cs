@@ -25,6 +25,10 @@ public class RemoteDebug
     }
 
     
+    /// <summary>
+    /// Permet d'obtenir l'adresse ip local, retourne l'adresse de la première interface étant connecté à internet
+    /// </summary>
+    /// <returns></returns>
     private static string GetLocalIPAddress()
     {
         foreach (var netInterface in NetworkInterface.GetAllNetworkInterfaces())
@@ -38,7 +42,7 @@ public class RemoteDebug
 
 
     /// <summary>
-    ///     Execute le serveur Web pour les requetes API
+    /// Execute le serveur Web pour les requetes API
     /// </summary>
     /// <param name="address"></param>
     /// <param name="port"></param>
@@ -71,12 +75,16 @@ public class RemoteDebug
         Console.WriteLine("Serveur arreté");
     }
     
-    // Définition du délégué
+    
+    //Gestion du callback
     public delegate void Callaback(string command, string content);
-
-    // Définition de l'événement basé sur ce délégué
+    
     public event Callaback? CommandCallback;
 
+    /// <summary>
+    /// Gestion des requetes GET
+    /// </summary>
+    /// <param name="context"></param>
     private void HandleGetRequest(HttpListenerContext context)
     {
        
@@ -124,7 +132,10 @@ public class RemoteDebug
         
     }
     
-    
+    /// <summary>
+    /// Gestion des requestes post
+    /// </summary>
+    /// <param name="context"></param>
     private static void HandlePostRequest(HttpListenerContext context)
     {
         using var reader = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding);
@@ -151,6 +162,13 @@ public class RemoteDebug
         }
     }
     
+    
+    /// <summary>
+    /// Permet d'envoyer un message au client
+    /// </summary>
+    /// <param name="response"></param>
+    /// <param name="message"></param>
+    /// <param name="statusCode"></param>
     private static void SendResponse(HttpListenerResponse response, string message, HttpStatusCode statusCode)
     {
         byte[] buffer = Encoding.UTF8.GetBytes(message);

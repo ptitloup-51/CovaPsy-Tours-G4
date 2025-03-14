@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VoitureAutonome")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77680b3f22db47fecc6fbb9d43a9d194ef338498")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fee3ebfce2ff41fe7e82c5202a33554b87aac999")]
 [assembly: System.Reflection.AssemblyProductAttribute("VoitureAutonome")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VoitureAutonome")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -27,6 +27,10 @@ public class STMCom
         
     }
 
+    /// <summary>
+    /// écout SPI, appelle la fonction de gestion (callback) lors de la reception d'un message via le bus SPI 
+    /// </summary>
+    /// <param name="settings"></param>
     public void Listen(SpiConnectionSettings settings)
     {
         IsListening = true;
@@ -59,9 +63,9 @@ public class STMCom
         
     }
     
+    
+    //Gestion du callback
     public delegate void Callaback(string message);
-
-    // Définition de l'événement basé sur ce délégué
     public event Callaback? OnMessageReceive;
     
     

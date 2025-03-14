@@ -61,10 +61,6 @@ public class Program
                 Console.WriteLine("nouveau radius : " + content);
                // auto.Radius = Convert.ToInt32(content);
                 break;
-            case "test":
-                Communication communication = new Communication();
-                communication.Com();
-                break;
             case "scan":
                 ScanTest(Convert.ToInt32(content));
                 break;

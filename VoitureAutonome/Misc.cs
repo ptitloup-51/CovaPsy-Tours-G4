@@ -9,6 +9,15 @@ public class Misc
     private static float R = 0.1f;   // Bruit de mesure du LiDAR
     
     
+    /// <summary>
+    /// Permet de maper des valeurs de façon linéaire
+    /// </summary>
+    /// <param name="angle"> valeur à mapper</param>
+    /// <param name="minAngle"> valeur minimal que l'entrée peut avoir</param>
+    /// <param name="maxAngle"> valeur maximale que l'entrée peut avoir</param>
+    /// <param name="minOutput"> valeur minimal en sortie</param>
+    /// <param name="maxOutput"> valeur maximal en sortie</param>
+    /// <returns></returns>
     public int LinearMap(float angle, float minAngle, float maxAngle, float minOutput, float maxOutput)
     {
         // Mapper linéairement l'angle entre minOutput et maxOutput
@@ -16,6 +25,15 @@ public class Misc
         return (int)output;
     }
     
+    /// <summary>
+    /// Permet de mapper une valeur avec une exponentielle sur les valeurs extremes
+    /// </summary>
+    /// <param name="angle"> valeur à mapper</param>
+    /// <param name="minAngle"> valeur minimum que peut prendre l'entrée</param>
+    /// <param name="maxAngle"> valeur maximale que peut prendre l'entrée</param>
+    /// <param name="minOutput"> valeur minimale de la sortie</param>
+    /// <param name="maxOutput"> valeur maximale de la sortie</param>
+    /// <returns></returns>
     public int ExponentialMap(float angle, float minAngle, float maxAngle, float minOutput, float maxOutput)
     {
         // Normaliser l'angle entre -1 et 1
@@ -34,6 +52,11 @@ public class Misc
         return (int)output;
     }
     
+    /// <summary>
+    /// Algorithme de filtrage des données, retourne un tableau filtré par l'algorithme de Kalman
+    /// </summary>
+    /// <param name="input"> tableau d'entrée à filtrer</param>
+    /// <returns> retourne un tableau filtré via l'algorithme de Kalman</returns>
     public static float[] KalmanFilter(float[] input)
     {
         
@@ -67,6 +90,12 @@ public class Misc
         return filtered;
     }
 
+    /// <summary>
+    /// Permet d'enregistrer dans un CSV un tableau à deux colonnes
+    /// </summary>
+    /// <param name="input"> tableau 1</param>
+    /// <param name="filteredInput"> tableau 2</param>
+    /// <param name="path"> chemin ou le fichier CSV sera enregistré</param>
     public void ArrayToCSV(float[] input, float[] filteredInput, string path = "/home/covapsytours5/Documents/result.csv")
     {
         StringBuilder csv = new StringBuilder();
@@ -81,6 +110,9 @@ public class Misc
         Console.WriteLine($"Fichier CSV généré : {path}");
     }
 
+    /// <summary>
+    /// Permet de tester le filtrage de Kalman
+    /// </summary>
     public void Test()
     {
         Random rand = new Random();

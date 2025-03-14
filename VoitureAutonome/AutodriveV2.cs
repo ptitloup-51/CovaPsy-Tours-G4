@@ -18,10 +18,10 @@ namespace VoitureAutonome
         private Steering Steering = new Steering();
         private Thrust Thrust = new Thrust();
 
-        float minSafeDistance = 1400; // Seuil de distance acceptable pour avancer
-        int maxSpeed = 25; // Vitesse maximale
-        int minSpeed = 10; // Vitesse minimale dans les virages
-        int speed = 25; // Vitesse actuelle
+        float Radius = 1400; //Radius
+        int maxSpeed = 20; // Vitesse maximale
+        int minSpeed = 15; // Vitesse minimale dans les virages
+        int speed = 20; // Vitesse actuelle
 
         public AutodriveV2()
         {
@@ -53,7 +53,7 @@ namespace VoitureAutonome
 
             for (int i = 0; i < LidarPoints.Length; i++)
             {
-                if (LidarPoints[i] > minSafeDistance) // On considère qu'il y a un passage libre
+                if (LidarPoints[i] > Radius) // On considère qu'il y a un passage libre
                 {
                     if (currentGapStart == -1)
                         currentGapStart = i;
@@ -88,7 +88,6 @@ namespace VoitureAutonome
         public void Run()
         {
             IsRunning = true;
-
             var lidar = new RPLidar("/dev/ttyUSB0", 256000);
             Steering.SetDirection(0);
             Thread.Sleep(4000);
@@ -111,7 +110,6 @@ namespace VoitureAutonome
 
         private void AdjustSpeed(int bestAngle)
         {
-            // Définir une plage d'angles autour de la direction actuelle pour vérifier les obstacles
             int angleRange = 30; // Plage de ±30 degrés autour de la direction
             float minDistanceInRange = float.MaxValue;
 
@@ -128,11 +126,11 @@ namespace VoitureAutonome
             // Si aucune distance valide n'est trouvée, utiliser la distance maximale
             if (minDistanceInRange == float.MaxValue)
             {
-                minDistanceInRange = minSafeDistance * 2; // Valeur par défaut
+                minDistanceInRange = Radius * 2; // Valeur par défaut
             }
 
             // Ajuster la vitesse en fonction de la distance minimale
-            float speedFactor = Math.Clamp((minDistanceInRange - minSafeDistance) / minSafeDistance, 0, 1);
+            float speedFactor = Math.Clamp((minDistanceInRange - Radius) / Radius, 0, 1);
             speed = (int)(minSpeed + (maxSpeed - minSpeed) * speedFactor);
 
             // Appliquer la nouvelle vitesse
@@ -153,7 +151,7 @@ namespace VoitureAutonome
                 LidarTimestamps360[angleIndex] = currentTime; // Mettre à jour le timestamp
             }
 
-            // Filtrer les points trop vieux (plus de 0.6 seconde)
+            // Filtrer les points trop vieux (plus de 0,6 seconde)
             for (int i = 0; i < 360; i++)
             {
                 if ((currentTime - LidarTimestamps360[i]).TotalSeconds > 0.6f)
