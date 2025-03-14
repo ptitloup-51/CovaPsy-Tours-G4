@@ -146,7 +146,7 @@ public class Steering
     }
 
     /// <summary>
-    /// Définit l'angle de direction en degrés (-18° à +18°)
+    /// Définit l'angle de direction entre -100 et 100 
     /// </summary>
     /// <param name="angle"></param>
     public void SetDirection(float angle)
