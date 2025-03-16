@@ -90,7 +90,7 @@ Le Raspberry Pi effectue la majeure partie du traitement car il est plus puissan
 ---
 ## 🛠️ Outils de Développement
 
-| Type                                 | Outils que nosu avons utilisé                                                                                                               |
+| Type                                 | Outils que nous avons utilisé                                                                                                               |
 |--------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | C# (Raspberry Pi & interface client) | [Rider](https://www.jetbrains.com/fr-fr/rider/)                                                                                             |
 | C (STM32)                            | [CLion](https://www.jetbrains.com/fr-fr/clion/) & [CubeIDE](https://www.google.com/search?client=safari&rls=en&q=cubeide&ie=UTF-8&oe=UTF-8) |
@@ -101,7 +101,7 @@ Le Raspberry Pi effectue la majeure partie du traitement car il est plus puissan
 
 | Version | Détails |
 |---------|---------|
-| **1.0** | Dernière version |
+| [**1.0**](https://github.com/ptitloup-51/CovaPsy-Tours-G4/releases/tag/v1.0.0) | Dernière version |
 
 _Contient le code source de Remote Client, Le code source de Voiture Autonome, Le code source de STM32 ainsi que les versions compilés de RemoteClient et Voiture Autonome._
 
