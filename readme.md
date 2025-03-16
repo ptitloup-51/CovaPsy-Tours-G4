@@ -121,7 +121,8 @@ _Contient le code source de Remote Client, Le code source de Voiture Autonome, L
 ---
 ##  👏Remerciements
 - 🏫 University of Virginia pour l'algorithme de [follow the gap](https://ras.papercept.net/images/temp/IROS/files/3775.pdf)
-
+- 🎓 IUT GEII de Tours
+- le repos Github de [asheesh.maheshwari](https://github.com/asheesh1996/RpLidar.NET) pour son implémentation du Lidar en C#
 
 ---
 
