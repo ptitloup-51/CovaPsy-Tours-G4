@@ -1,4 +1,4 @@
-# SAE S6 - Voiture Autonome
+# CovaPsy Tours Groupe 4 - Voiture Autonome
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c.svg)](https://forthebadge.com)
